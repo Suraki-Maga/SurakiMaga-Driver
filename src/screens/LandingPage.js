@@ -9,19 +9,24 @@ import { useFonts } from 'expo-font';
 
 
 function LandingPage() {
+    const [show, setShow] = React.useState(false);
     return (
         <View style={styles.container}>
-            <ScrollView>
                 <View style={styles.header}>
                 <Image source={require('../../assets/images/logo.jpg')} style={styles.logo}/>
-                    <TouchableOpacity style={styles.icon1}>
+                    <TouchableOpacity style={styles.icon1} onPress={() => setShow((s) => !s)}> 
                         <Icon type="material-community"
                             name="menu"
                             color={colors.orange}
                             size={40} />
                     </TouchableOpacity>
-                    
                 </View>
+                {show ? <View style={styles.menuBox}>
+                    <TouchableOpacity><Text style={styles.navigationMenuText}>Home</Text></TouchableOpacity>
+                    <TouchableOpacity><Text style={styles.navigationMenuText}>What are we doing?</Text></TouchableOpacity>
+                    <TouchableOpacity><Text style={styles.navigationMenuText}>FAQ</Text></TouchableOpacity>
+                </View> : <View style={styles.menuBoxHide}></View>}
+                <ScrollView style={styles.scrollview} >
                 <View style={styles.mainBox}>
                     <View style={styles.title}>
                     <Text style={styles.Welcometxt}>Welcome to</Text>
@@ -59,6 +64,9 @@ const styles = StyleSheet.create({
         paddingTop:parameters.statusBarHeight,
         alignItems:'center'
     },
+    scrollview:{
+        marginBottom:20
+    },
     mainBox:{
         display:"flex",
         alignItems:'center',
@@ -94,6 +102,31 @@ const styles = StyleSheet.create({
         alignItems:"center",
         width:80,
         height:100,
+    },
+    menuBoxHide:{
+        display:'none'
+    },
+    menuBox:{
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:colors.midBoxWhite,
+        borderRadius:10,
+        shadowColor: '#171717',
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.4,
+        shadowRadius: 2,
+        width:parameters.SCREEN_WIDTH*7/8,
+        height:parameters.SCREEN_HEIGHT*1.5/8,
+        marginBottom:20
+    },
+    navigationMenuText:{
+        fontSize:30,
+        fontWeight:'bold',
+        color:colors.orange,
+        marginBottom:10,
+        marginTop:10
     },
     title:{
         display:'flex',
@@ -160,7 +193,7 @@ const styles = StyleSheet.create({
         display:"flex",
         flexDirection:'row',
         width:parameters.SCREEN_WIDTH,
-        height:parameters.SCREEN_HEIGHT/20,
+        height:parameters.SCREEN_HEIGHT/14,
         backgroundColor:colors.grey,
         // alignItems:'center',
         paddingLeft:20,
