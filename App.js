@@ -8,7 +8,7 @@ import Signup from './src/screens/Signup';
 export default function App() {
   return (
     <View>
-      <ProfilePage/>
+      <Registration/>
     </View>
   );
 }

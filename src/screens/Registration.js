@@ -1,12 +1,50 @@
 import { StyleSheet, Text, View,Image,TouchableOpacity } from 'react-native'
-import React from 'react'
+import React,{ useState, useEffect } from 'react'
 import { TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import apiClient from '../Services/apiClient'
 import { colors,parameters } from '../globals/styles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
-const Registration = () => {
-    
+const Registration = ({user,setUser}) => {
+    //newly added
+    // const navigate = useNavigation();
+    const [errors, setErrors] = useState({})
+    const [form, setForm] = useState({
+      nic: "",
+      otp: ""
+    })
+
+    // useEffect(() => {
+    //   // if user is already logged in,
+    //   // redirect them to the home page
+    //   if (user?.username) {
+    //     navigate("/")
+    //   }
+    // }, [user, navigate])
+
+    const handleOnInputChange = (event) => {
+      setForm((f) => ({ ...f, [event.target.name]: event.target.value }))
+    }
+
+    const handleOnSubmit =async ()=>{
+      setErrors((e) => ({ ...e, form: null }))
+
+      const { data, error } = await apiClient.verifyUser({
+          nic: form.nic,
+          otp: form.otp
+
+      })
+      if (data) {
+        setUser(data.user)
+        apiClient.setToken(data.token)
+      }
+      if (error) {
+        setErrors((e) => ({ ...e, form: error }))
+      }
+    }
+
     
   return (
     <KeyboardAwareScrollView
@@ -27,6 +65,9 @@ const Registration = () => {
             <TextInput style={styles.textInput}
             mode='outlined'
             label="National ID card No"
+            value={form.nic}
+            //add on change
+            onChangeText={(text)=>setForm({...form,nic:text})}
             theme={{ colors: { primary: '#FF8C01',underlineColor:'#FF8C01',}}}
             left={<TextInput.Icon name="plus" />}
             
@@ -34,11 +75,16 @@ const Registration = () => {
             <TextInput style={styles.textInput}
             mode='outlined'
             label="Verification code"
+            value={form.otp}
+            //add on change
+            onChangeText={(text)=>setForm({...form,otp:text})}
             theme={{ colors: { primary: '#FF8C01',underlineColor:'#FF8C01',}}}
             left={<TextInput.Icon name="plus" />}
             />
         </View>
-        <TouchableOpacity style ={styles.button}>
+        
+
+        <TouchableOpacity style ={styles.button} onPress={handleOnSubmit}>
             <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
 
