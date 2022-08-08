@@ -21,19 +21,11 @@ class ApiClient{
         if(this.token){
             headers["Authorization"]=`Bearer ${this.token}`
         }
-        console.log("hello",headers,data,url,method)
+        // console.log("hello",headers,data,url,method)
         try {
             const res = await axios({url, method, data, headers })
-            console.log(res)
-            return { data: res.data, error: null }
-            // const response = await fetch(url, {
-            //     method,
-            //     headers,
-            //     data
-            // });
-            // const res = await response.json();
             // console.log(res)
-            // return  { data: res.data, error: null };
+            return { data: res.data, error: null }
         } catch (error) {
             console.error("APIclient.makeRequest.error:")
             console.error({ errorResponse: error.response })
@@ -45,9 +37,12 @@ class ApiClient{
     async verifyUser(credentials) {
         return await this.request({ endpoint: `driverauth/verify`, method: `POST`, data: credentials })
     }
+    async sendOtp(credentials){
+        return await this.request({ endpoint: `driverauth/sendOtp`, method: `POST`, data: credentials })
+    }
 }
 
 
-const API = new ApiClient(process.env.REACT_APP_REMOTE_HOST_URL || "http://192.168.1.14:3001")
+const API = new ApiClient(process.env.REACT_APP_REMOTE_HOST_URL || "http://192.168.1.11:3001")
 
 export default API
