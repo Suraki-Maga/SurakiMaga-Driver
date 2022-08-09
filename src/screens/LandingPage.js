@@ -1,14 +1,11 @@
-import { StyleSheet, Text, View,TouchableOpacity, Dimensions,Image,ScrollView } from 'react-native'
+import { StyleSheet, Text, View,TouchableOpacity, Image,ScrollView } from 'react-native'
 import React from 'react'
 import { colors, parameters } from '../globals/styles'
-import { ScreenHeight, ScreenWidth } from '@rneui/base'
 import { Icon } from 'react-native-elements'
-import DropShadow from "react-native-drop-shadow";
-import { useFonts } from 'expo-font';
 
 
 
-function LandingPage() {
+function LandingPage({ navigation }) {
     const [show, setShow] = React.useState(false);
     return (
         <View style={styles.container}>
@@ -34,12 +31,15 @@ function LandingPage() {
                     </View>
                     
                     <Image source={require('../../assets/images/Picture1.png')} style={styles.midImage}/>
-                    <TouchableOpacity style={styles.button1}>
+                    <TouchableOpacity style={styles.button1}
+                        onPress={() => navigation.navigate('Registration')}>
                         <Text style={styles.button1Text}>Get Started!</Text>
                     </TouchableOpacity> 
                 </View>
                 <Text style={styles.smallText}>Already a registered driver?</Text>
-                <TouchableOpacity style={styles.button2}>
+                <TouchableOpacity style={styles.button2} 
+                    onPress={() => navigation.navigate('Login')
+                }>
                     <Text style={styles.button2Text}>Log in</Text>
                 </TouchableOpacity>
             </ScrollView>
@@ -65,7 +65,9 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     scrollview:{
-        marginBottom:20
+        marginBottom:parameters.SCREEN_HEIGHT/50,
+        // backgroundColor:"yellow",
+        
     },
     mainBox:{
         display:"flex",
@@ -176,7 +178,8 @@ const styles = StyleSheet.create({
         borderColor:colors.grey,
         alignItems:"center",
         justifyContent:"center",
-        marginTop:20
+        marginTop:20,
+        marginBottom:parameters.SCREEN_WIDTH/50
     },
     button2Text:{
         color:colors.font,
@@ -193,7 +196,7 @@ const styles = StyleSheet.create({
         display:"flex",
         flexDirection:'row',
         width:parameters.SCREEN_WIDTH,
-        height:parameters.SCREEN_HEIGHT/14,
+        height:parameters.SCREEN_HEIGHT/20,
         backgroundColor:colors.grey,
         // alignItems:'center',
         paddingLeft:20,
@@ -201,7 +204,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-between'
     },
     footerText:{
-        marginTop:20,
+        marginTop:10,
         fontSize:16,
         color:'white'
     }

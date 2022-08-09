@@ -15,3 +15,6 @@ export const parameters={
     SCREEN_WIDTH:Dimensions.get('window').width,
     SCREEN_HEIGHT:Dimensions.get('window').height
 }
+export const errors={
+    fontColor:'red'
+}

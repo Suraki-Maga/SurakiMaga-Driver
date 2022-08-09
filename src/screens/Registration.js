@@ -1,48 +1,53 @@
-import { StyleSheet, Text, View,Image,TouchableOpacity } from 'react-native'
-import React,{ useState, useEffect } from 'react'
+import { StyleSheet, Text, View,Image,TouchableOpacity,Modal } from 'react-native'
+import React,{ useState,useEffect } from 'react'
 import { TextInput } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
 import apiClient from '../Services/apiClient'
-import { colors,parameters } from '../globals/styles';
+import { colors,parameters,errors } from '../globals/styles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import * as Animatable from 'react-native-animatable';
 
-
-const Registration = ({user,setUser}) => {
+const Registration = ({navigation}) => {
     //newly added
     // const navigate = useNavigation();
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({
       nic: "",
       otp: ""
+
     })
-
-    // useEffect(() => {
-    //   // if user is already logged in,
-    //   // redirect them to the home page
-    //   if (user?.username) {
-    //     navigate("/")
-    //   }
-    // }, [user, navigate])
-
-    const handleOnInputChange = (event) => {
-      setForm((f) => ({ ...f, [event.target.name]: event.target.value }))
-    }
-
+    const [modalVisible, setModalVisible] = useState(false);
+    // const initialState={
+    //   msg:"",
+    //   id:"",
+      
+    // }
+    // const[resData,setResData]=useState(initialState)
+    
+    // const clearState = () => {
+    //   setResData({ ...initialState });
+    // }
     const handleOnSubmit =async ()=>{
       setErrors((e) => ({ ...e, form: null }))
 
       const { data, error } = await apiClient.verifyUser({
           nic: form.nic,
           otp: form.otp
-
       })
-      if (data) {
-        setUser(data.user)
-        apiClient.setToken(data.token)
+      if(data.driverId!="no driver"){
+        // setResData((resData)=>({...resData,id: data.driverId.id}))
+        navigation.navigate("Signup",{id:data.driverId.id,fullName:data.driverId.fullname})
+      }else{
+        
+        // setResData((resData)=>({...resData,msg: data.driverId}))
+        setModalVisible(true)
+        
       }
+      
       if (error) {
         setErrors((e) => ({ ...e, form: error }))
       }
+      // clearState()
+      
     }
 
     
@@ -53,6 +58,22 @@ const Registration = ({user,setUser}) => {
       contentContainerStyle={styles.container}
       scrollEnabled={false}
     >
+      <Modal
+        animationType="fade"
+        transparent
+        style={styles.alert}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.alert}>
+          <View style={styles.alertbox}>
+            <Text style={styles.alertTitle}>NIC and OTP doesn't match</Text>
+            <TouchableOpacity style={styles.confirmbtn} onPress={()=>setModalVisible(!modalVisible)}><Text style={styles.confirmbtnText}>OK</Text></TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
         {/* <ScrollView style={styles.scrollview}> */}
             <View style={styles.topic}>
                 <Image source={require('../../assets/images/logo.jpg')} style={styles.logo}/>
@@ -83,11 +104,10 @@ const Registration = ({user,setUser}) => {
             />
         </View>
         
-
+        
         <TouchableOpacity style ={styles.button} onPress={handleOnSubmit}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+            <Text style={styles.buttonText}>Verify me</Text>
         </TouchableOpacity>
-
         {/* </ScrollView> */}  
         <View style={styles.footer}>
                 <TouchableOpacity><Text style={styles.footerText}>Terms & conditions</Text></TouchableOpacity>
@@ -95,6 +115,7 @@ const Registration = ({user,setUser}) => {
          </View>  
     </KeyboardAwareScrollView> 
   )
+  
 }
 
 export default Registration
@@ -110,13 +131,51 @@ const styles = StyleSheet.create({
         paddingTop:parameters.statusBarHeight,
         alignItems:'center'
     },
-    // scrollview:{
-    //     display:'flex',
-    //     // justifyContent:'space-around',
-    //     marginBottom:10,
-    //     backgroundColor:colors.orange
+    alert:{
+      flex:1,
+      backgroundColor:'#00000090',
+      alignItems:'center',
+      justifyContent:'center',
+      width:parameters.SCREEN_WIDTH,
+      height:parameters.SCREEN_HEIGHT,
+     
+      // backgroundColor:'red',
 
-    // },
+    },
+    alertbox:{
+      paddingTop:5,
+      display:'flex',
+      borderRadius:5,
+      justifyContent:'space-evenly',
+      alignItems:'center',
+      width:parameters.SCREEN_WIDTH*3/4,
+      height:parameters.SCREEN_HEIGHT*4/20,
+      backgroundColor:colors.midBoxWhite,
+      // shadowColor: '#171717',
+      // shadowOffset: {width: -3, height: 4},
+      // shadowOpacity: 1,
+      // shadowRadius: 3,
+    },
+    alertTitle:{
+      fontSize:20
+    },
+    confirmbtn:{
+      height:40,
+      width:parameters.SCREEN_WIDTH/4,
+      backgroundColor:colors.orange,
+      borderRadius:5,
+      alignSelf:"center",
+      justifyContent:"center",
+      marginTop:20,
+      marginBottom:20
+    },
+    confirmbtnText:{
+      alignSelf:"center",
+      justifyContent:"center",
+      color:colors.white,
+      fontSize:20,
+      marginTop:-2
+    },
     topic:{
         
         backgroundColor:colors.white,
@@ -194,7 +253,7 @@ const styles = StyleSheet.create({
             display:"flex",
             flexDirection:'row',
             width:parameters.SCREEN_WIDTH,
-            height:parameters.SCREEN_HEIGHT/14,
+            height:parameters.SCREEN_HEIGHT/20,
             backgroundColor:colors.grey,
             // alignItems:'center',
             position:'absolute',
@@ -204,9 +263,15 @@ const styles = StyleSheet.create({
             justifyContent:'space-between'
         },
         footerText:{
-            marginTop:20,
+            marginTop:10,
             fontSize:16,
             color:'white'
         },
+        errorText:{
+          color:errors.fontColor
+        }
+          
+        
         
 })
+

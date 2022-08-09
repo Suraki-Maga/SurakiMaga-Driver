@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
             display:"flex",
             flexDirection:'row',
             width:parameters.SCREEN_WIDTH,
-            height:parameters.SCREEN_HEIGHT/14,
+            height:parameters.SCREEN_HEIGHT/20,
             backgroundColor:colors.grey,
             // alignItems:'center',
             position:'absolute',
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
             justifyContent:'space-between'
         },
         footerText:{
-            marginTop:20,
+            marginTop:10,
             fontSize:16,
             color:'white'
         },
