@@ -5,7 +5,7 @@ import { TextInput } from 'react-native-paper';
 import { colors, parameters } from '../globals/styles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const Signup = ({ route }) => {
+const Signup = ({ route,navigation }) => {
   const [errors, setErrors] = useState({})
   const [form, setForm] = useState({
     id: route.params.id,
@@ -21,7 +21,13 @@ const Signup = ({ route }) => {
       id:form.id,
       userName:form.userName
     })
-    console.log(data)
+    // console.log(data.respond)
+    // data.respond="taken"
+    if(data.respond!="taken"){
+      navigation.navigate("Verification",{id:form.id,userName:form.userName,password:form.password})
+    }else{
+      setModalVisible(true)
+    }
 
   }
   return (
@@ -31,6 +37,22 @@ const Signup = ({ route }) => {
       contentContainerStyle={styles.container}
       scrollEnabled={false}
     >
+      <Modal
+        animationType="fade"
+        transparent
+        style={styles.alert}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.alert}>
+          <View style={styles.alertbox}>
+            <Text style={styles.alertTitle}>This username is already taken!</Text>
+            <TouchableOpacity style={styles.confirmbtn} onPress={()=>setModalVisible(!modalVisible)}><Text style={styles.confirmbtnText}>OK</Text></TouchableOpacity>
+          </View>
+        </View>
+      </Modal>  
       <View style={styles.topic}>
 
         <Image source={require('../../assets/images/logo.jpg')} style={styles.logo} />
@@ -91,6 +113,51 @@ const styles = StyleSheet.create({
     height: parameters.SCREEN_HEIGHT,
     paddingTop: parameters.statusBarHeight,
     alignItems: 'center'
+  },
+  alert:{
+    flex:1,
+    backgroundColor:'#00000090',
+    alignItems:'center',
+    justifyContent:'center',
+    width:parameters.SCREEN_WIDTH,
+    height:parameters.SCREEN_HEIGHT,
+   
+    // backgroundColor:'red',
+
+  },
+  alertbox:{
+    paddingTop:5,
+    display:'flex',
+    borderRadius:5,
+    justifyContent:'space-evenly',
+    alignItems:'center',
+    width:parameters.SCREEN_WIDTH*3/4,
+    height:parameters.SCREEN_HEIGHT*4/20,
+    backgroundColor:colors.midBoxWhite,
+    // shadowColor: '#171717',
+    // shadowOffset: {width: -3, height: 4},
+    // shadowOpacity: 1,
+    // shadowRadius: 3,
+  },
+  alertTitle:{
+    fontSize:20
+  },
+  confirmbtn:{
+    height:40,
+    width:parameters.SCREEN_WIDTH/4,
+    backgroundColor:colors.orange,
+    borderRadius:5,
+    alignSelf:"center",
+    justifyContent:"center",
+    marginTop:20,
+    marginBottom:20
+  },
+  confirmbtnText:{
+    alignSelf:"center",
+    justifyContent:"center",
+    color:colors.white,
+    fontSize:20,
+    marginTop:-2
   },
   homeLink: {
     display: 'flex',

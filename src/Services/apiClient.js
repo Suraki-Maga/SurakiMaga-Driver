@@ -40,6 +40,12 @@ class ApiClient{
     async sendOtp(credentials){
         return await this.request({ endpoint: `driverauth/sendOtp`, method: `POST`, data: credentials })
     }
+    async resendOtp(){
+        return await this.request({ endpoint: `driverauth/resendOtp`, method: `GET` })
+    }
+    async submitCredentials(credentials){
+        return await this.request({ endpoint: `driverauth/submitCredentials`, method: `GET`, data:credentials})
+    }
 }
 
 

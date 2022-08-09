@@ -5,6 +5,7 @@ import Login from './src/screens/Login';
 import ProfilePage from './src/screens/ProfilePage';
 import Registration from './src/screens/Registration';
 import Signup from './src/screens/Signup';
+import Verification from './src/screens/Verification';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Registration" component={Registration} /> 
         <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Verification" component={Verification} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
       </Stack.Navigator>  
     </NavigationContainer>
