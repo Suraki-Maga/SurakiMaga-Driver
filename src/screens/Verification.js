@@ -22,6 +22,7 @@ const Verification = ({ route,navigation }) => {
       password:form.password,
       otp:form.otp
     })
+    console.log(data)
     
     
     if (error) {
