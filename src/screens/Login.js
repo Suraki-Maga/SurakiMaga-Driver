@@ -1,17 +1,54 @@
-import { StyleSheet, Text, View,Image,TouchableOpacity } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import apiClient from '../Services/apiClient'
 import { TextInput } from 'react-native-paper';
-import { colors,parameters } from '../globals/styles';
+import { colors, parameters } from '../globals/styles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const Login = () => {
+  const [errors, setErrors] = useState({})
+  const [form, setForm] = useState({
+    userName:"",
+    password:""
+
+  })
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleOnSubmit = async () => {
+    setErrors((e) => ({ ...e, form: null }))
+    const { data, error } = await apiClient.login({
+      userName:form.userName,
+      password:form.password
+    })
+    console.log(data.respond)
+    // data.respond="taken"
+
+  }
+
   return (
+    
     <KeyboardAwareScrollView
       style={{ backgroundColor: '#4c69a5' }}
       resetScrollToCoords={{ x: 0, y: 0 }}
       contentContainerStyle={styles.container}
       scrollEnabled={false}
     >
+    <Modal
+        animationType="fade"
+        transparent
+        style={styles.alert}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.alert}>
+          <View style={styles.alertbox}>
+            <Text style={styles.alertTitle}>Your username or password!</Text>
+            <Text style={styles.alertTitle}>might be incorrect!</Text>
+            <TouchableOpacity style={styles.confirmbtn} onPress={()=>setModalVisible(!modalVisible)}><Text style={styles.confirmbtnText}>OK</Text></TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
         {/* <ScrollView style={styles.scrollview}> */}
             <View style={styles.topic}>
     
@@ -24,6 +61,7 @@ const Login = () => {
             mode='outlined'
             label="Username"
             theme={{ colors: { primary: '#FF8C01',underlineColor:'#FF8C01',}}}
+            onChangeText={(text) => setForm({ ...form, userName: text })}
             left={<TextInput.Icon name="account" />}
             
             />
@@ -32,12 +70,13 @@ const Login = () => {
             label="Password"
             secureTextEntry
             theme={{ colors: { primary: '#FF8C01',underlineColor:'#FF8C01',}}}
+            onChangeText={(text) => setForm({ ...form, password: text })}
             left={<TextInput.Icon name="lock" />}
             right={<TextInput.Icon name="eye" />}
             />
         </View>
         <TouchableOpacity style ={styles.button}>
-            <Text style={styles.buttonText}>Log in</Text>
+            <Text style={styles.buttonText} onPress={handleOnSubmit}>Log in</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.textLink}><Text>Forgot password?</Text></TouchableOpacity>
         {/* </ScrollView> */}  

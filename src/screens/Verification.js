@@ -23,6 +23,9 @@ const Verification = ({ route,navigation }) => {
       otp:form.otp
     })
     console.log(data)
+    if(data.respond=="false"){
+      setModalVisible(true)
+    }
     
     
     if (error) {
@@ -53,7 +56,7 @@ const Verification = ({ route,navigation }) => {
       >
         <View style={styles.alert}>
           <View style={styles.alertbox}>
-            <Text style={styles.alertTitle}>NIC and OTP doesn't match</Text>
+            <Text style={styles.alertTitle}>The otp you entered is incorrect!</Text>
             <TouchableOpacity style={styles.confirmbtn} onPress={()=>setModalVisible(!modalVisible)}><Text style={styles.confirmbtnText}>OK</Text></TouchableOpacity>
           </View>
         </View>

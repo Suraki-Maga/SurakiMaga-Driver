@@ -46,6 +46,10 @@ class ApiClient{
     async submitCredentials(credentials){
         return await this.request({ endpoint: `driverauth/submitCredentials`, method: `POST`, data:credentials})
     }
+    async login(credentials){
+        console.log(credentials)
+        return await this.request({ endpoint: `driverauth/login`, method: `POST`, data:credentials})
+    }
 }
 
 
