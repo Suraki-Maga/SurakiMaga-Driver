@@ -88,7 +88,7 @@ const Signup = ({ route,navigation }) => {
           <TouchableOpacity style={styles.button} onPress={handleOnSubmit}>
             <Text style={styles.buttonText}>Sign up</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.textLink}><Text>Already have an account?</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.textLink}  onPress={() => navigation.navigate('Login')}><Text>Already have an account?</Text></TouchableOpacity>
         </View>
 
       </View>
