@@ -5,7 +5,7 @@ import { TextInput } from 'react-native-paper';
 import { colors, parameters } from '../globals/styles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [errors, setErrors] = useState({})
   const [form, setForm] = useState({
     userName:"",
@@ -13,13 +13,19 @@ const Login = () => {
 
   })
   const [modalVisible, setModalVisible] = useState(false);
+  
   const handleOnSubmit = async () => {
     setErrors((e) => ({ ...e, form: null }))
     const { data, error } = await apiClient.login({
       userName:form.userName,
       password:form.password
     })
-    console.log(data.respond)
+    console.log(data)
+    if(data.respond!="invalid"){
+      navigation.navigate("ProfilePage")
+    }else{
+      setModalVisible(true)
+    }
     // data.respond="taken"
 
   }
@@ -43,12 +49,12 @@ const Login = () => {
       >
         <View style={styles.alert}>
           <View style={styles.alertbox}>
-            <Text style={styles.alertTitle}>Your username or password!</Text>
+            <Text style={styles.alertTitle}>Your username or password</Text>
             <Text style={styles.alertTitle}>might be incorrect!</Text>
             <TouchableOpacity style={styles.confirmbtn} onPress={()=>setModalVisible(!modalVisible)}><Text style={styles.confirmbtnText}>OK</Text></TouchableOpacity>
           </View>
         </View>
-      </Modal>
+    </Modal>
         {/* <ScrollView style={styles.scrollview}> */}
             <View style={styles.topic}>
     
@@ -100,6 +106,51 @@ const styles = StyleSheet.create({
         height:parameters.SCREEN_HEIGHT,
         paddingTop:parameters.statusBarHeight,
         alignItems:'center'
+    },
+    alert:{
+      flex:1,
+      backgroundColor:'#00000090',
+      alignItems:'center',
+      justifyContent:'center',
+      width:parameters.SCREEN_WIDTH,
+      height:parameters.SCREEN_HEIGHT,
+     
+      // backgroundColor:'red',
+  
+    },
+    alertbox:{
+      paddingTop:5,
+      display:'flex',
+      borderRadius:5,
+      justifyContent:'space-evenly',
+      alignItems:'center',
+      width:parameters.SCREEN_WIDTH*3/4,
+      height:parameters.SCREEN_HEIGHT*4/20,
+      backgroundColor:colors.midBoxWhite,
+      // shadowColor: '#171717',
+      // shadowOffset: {width: -3, height: 4},
+      // shadowOpacity: 1,
+      // shadowRadius: 3,
+    },
+    alertTitle:{
+      fontSize:20
+    },
+    confirmbtn:{
+      height:40,
+      width:parameters.SCREEN_WIDTH/4,
+      backgroundColor:colors.orange,
+      borderRadius:5,
+      alignSelf:"center",
+      justifyContent:"center",
+      marginTop:20,
+      marginBottom:20
+    },
+    confirmbtnText:{
+      alignSelf:"center",
+      justifyContent:"center",
+      color:colors.white,
+      fontSize:20,
+      marginTop:-2
     },
     homeLink:{
         display:'flex',

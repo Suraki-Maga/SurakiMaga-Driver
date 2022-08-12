@@ -25,6 +25,8 @@ const Verification = ({ route,navigation }) => {
     console.log(data)
     if(data.respond=="false"){
       setModalVisible(true)
+    }else{
+      navigation.navigate("ProfilePage")
     }
     
     
