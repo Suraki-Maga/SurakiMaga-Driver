@@ -31,7 +31,7 @@ const ProfilePage = ({navigation}) => {
             console.log(data)
 
             setFetchData({ name:data.result.fullname })
-            
+
         }
     
         getKind();
