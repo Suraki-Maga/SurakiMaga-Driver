@@ -7,8 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import * as Animatable from 'react-native-animatable';
 
 const Registration = ({navigation}) => {
-    //newly added
-    // const navigate = useNavigation();
+
     const [errors, setErrors] = useState({})
     const [form, setForm] = useState({
       nic: "",
@@ -16,16 +15,7 @@ const Registration = ({navigation}) => {
 
     })
     const [modalVisible, setModalVisible] = useState(false);
-    // const initialState={
-    //   msg:"",
-    //   id:"",
-      
-    // }
-    // const[resData,setResData]=useState(initialState)
-    
-    // const clearState = () => {
-    //   setResData({ ...initialState });
-    // }
+
     const handleOnSubmit =async ()=>{
       setErrors((e) => ({ ...e, form: null }))
 

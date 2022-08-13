@@ -8,9 +8,11 @@ import Signup from './src/screens/Signup';
 import Verification from './src/screens/Verification';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as SecureStore from 'expo-secure-store';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
