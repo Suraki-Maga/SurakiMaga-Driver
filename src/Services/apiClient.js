@@ -1,16 +1,33 @@
 import axios from "axios"
+import * as SecureStore from 'expo-secure-store';
+
 
 class ApiClient{
     constructor(remoteHostUrl) {
         this.remoteHostUrl = remoteHostUrl
         this.token = null
-        this.tokenName = "surakimaga_driver_token"
+        this.tokenName = 'surakimaga_driver_token'
     }
 
-    setToken(token) {
-    this.token = token
+    async setToken(token) {
+        this.token = token
+        await SecureStore.setItemAsync(this.tokenName,token);
     }
-
+    getToken = async () => {
+        // get Data from Storage
+        try {
+          const data = await SecureStore.getItemAsync(this.tokenName);
+          if (data !== null) {
+            this.setToken(data)
+            return data
+          }
+        } catch (error) {
+          console.log(error);
+        }
+    }
+    removeToken = async () => {
+        await SecureStore.setItemAsync(this.tokenName,"");
+    }
     async request({ endpoint, method = `GET`, data = {} }) {
         const url = `${this.remoteHostUrl}/${endpoint}`
 
@@ -21,7 +38,7 @@ class ApiClient{
         if(this.token){
             headers["Authorization"]=`Bearer ${this.token}`
         }
-        // console.log("hello",headers,data,url,method)
+        console.log("hello",headers,data,url,method)
         try {
             const res = await axios({url, method, data, headers })
             // console.log(res)
@@ -48,6 +65,9 @@ class ApiClient{
     }
     async login(credentials){
         return await this.request({ endpoint: `driverauth/login`, method: `POST`, data:credentials})
+    }
+    async loadDetails(){
+        return await this.request({ endpoint: `driverauth/details`, method: `GET`})
     }
 }
 

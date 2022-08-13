@@ -1,13 +1,42 @@
 import { StyleSheet, Text, View,TouchableOpacity,Image, ScrollView} from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import apiClient from '../Services/apiClient'
 import { Icon } from 'react-native-elements'
 import { colors,parameters } from '../globals/styles'
 
-const ProfilePage = () => {
-    var name="Roshan Senevirathne"
-    var location="ICC Complex,Piliyandala"
-    var location1="D.S. Senanayake College,Colombo"
-    var location2="Royal College,Colombo"
+const ProfilePage = ({navigation}) => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [errors, setErrors] = useState({})
+    const [fetchData,setFetchData]=useState({
+        name:"john Doe",
+        location:"ICC Complex,Piliyandala",
+        location1:"D.S. Senanayake College,Colombo",
+        location2:"Royal College,Colombo"
+    })
+    
+    useEffect(() => {
+        apiClient.getToken().then(data => data).then(value => {
+            if(value==""){
+                navigation.navigate("Login")
+            }else{
+                apiClient.setToken(value)
+            }
+        })
+        .catch(err => console.log(err))
+    });
+
+    useEffect(() => {
+        async function getKind() { 
+            const{data,error}=await apiClient.loadDetails()
+            console.log(data)
+
+            setFetchData({ name:data.result.fullname })
+            
+        }
+    
+        getKind();
+    }, []);
+
   return (
     <View style={styles.container}>
         <View style={styles.header}>
@@ -36,7 +65,7 @@ const ProfilePage = () => {
             <View style={styles.nameBox}>
                 <Image source={require('../../assets/images/profilePic.jpg')} style={styles.profilePicBig}/> 
                 <View style={styles.nameAndEdit}>
-                    <Text style={styles.nameContainer}>{name}</Text>
+                    <Text style={styles.nameContainer}>{fetchData.name}</Text>
                     <TouchableOpacity style={styles.button1}><Text style={styles.button1Text}>edit profie</Text></TouchableOpacity>
                 </View>
             </View>
@@ -47,7 +76,7 @@ const ProfilePage = () => {
                         name="map-marker"
                         color={colors.grey}
                         size={30} />
-                <Text style={styles.locationText2}>{location}</Text>
+                <Text style={styles.locationText2}>{fetchData.location}</Text>
                 </TouchableOpacity>
             
                 <Text style={styles.locationText1}>Ending Point</Text>
@@ -56,14 +85,14 @@ const ProfilePage = () => {
                         name="map-marker"
                         color={colors.grey}
                         size={30} />
-                <Text style={styles.locationText2}>{location1}</Text>
+                <Text style={styles.locationText2}>{fetchData.location1}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.location}>
                 <Icon type="material-community"
                         name="map-marker"
                         color={colors.grey}
                         size={30} />
-                <Text style={styles.locationText2}>{location2}</Text>
+                <Text style={styles.locationText2}>{fetchData.location2}</Text>
                 </TouchableOpacity>
                 <View style={styles.nameBox2}>
                     <TouchableOpacity style={styles.button2}><Text style={styles.button2Text}>Morning student list</Text></TouchableOpacity>

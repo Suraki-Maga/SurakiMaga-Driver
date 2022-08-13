@@ -14,6 +14,16 @@ const Verification = ({ route,navigation }) => {
     password:route.params.password,
     otp: ""
   })
+  // useEffect(() => {
+  //   apiClient.getToken().then(data => data).then(value => {
+  //       console.log(value)
+  //       if(value!=""){
+  //           navigation.navigate("Login")
+  //       }
+  //   })
+  //   .catch(err => console.log(err))
+  // });
+
   const handleOnSubmit =async ()=>{
     setErrors((e) => ({ ...e, form: null }))
     const { data, error } = await apiClient.submitCredentials({
@@ -26,6 +36,7 @@ const Verification = ({ route,navigation }) => {
     if(data.respond=="false"){
       setModalVisible(true)
     }else{
+      apiClient.setToken(data.token)
       navigation.navigate("ProfilePage")
     }
     

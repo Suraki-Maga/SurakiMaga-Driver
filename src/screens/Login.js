@@ -22,6 +22,9 @@ const Login = ({navigation}) => {
     })
     console.log(data)
     if(data.respond!="invalid"){
+      //console.log(data.token)
+      apiClient.setToken(data.token)
+    
       navigation.navigate("ProfilePage")
     }else{
       setModalVisible(true)

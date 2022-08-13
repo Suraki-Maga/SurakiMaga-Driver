@@ -1,12 +1,20 @@
 import { StyleSheet, Text, View,TouchableOpacity, Image,ScrollView } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect,useLayoutEffect } from 'react';
 import { colors, parameters } from '../globals/styles'
 import { Icon } from 'react-native-elements'
-
+import apiClient from '../Services/apiClient'
 
 
 function LandingPage({ navigation }) {
     const [show, setShow] = React.useState(false);
+    useLayoutEffect(() => {
+        apiClient.getToken().then(data => data).then(value => {
+            if(value!=""){
+                navigation.navigate("ProfilePage")
+            }
+        })
+        .catch(err => console.log(err))
+    });
     return (
         <View style={styles.container}>
                 <View style={styles.header}>
