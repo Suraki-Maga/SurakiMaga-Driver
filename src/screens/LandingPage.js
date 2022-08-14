@@ -10,7 +10,7 @@ function LandingPage({ navigation }) {
     useLayoutEffect(() => {
         apiClient.getToken().then(data => data).then(value => {
             if(value!=""){
-                navigation.navigate("ProfilePage")
+                navigation.navigate("TabNavigator")
             }
         })
         .catch(err => console.log(err))

@@ -37,7 +37,7 @@ const Verification = ({ route,navigation }) => {
       setModalVisible(true)
     }else{
       apiClient.setToken(data.token)
-      navigation.navigate("ProfilePage")
+      navigation.navigate("TabNavigator")
     }
     
     

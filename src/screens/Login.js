@@ -25,7 +25,7 @@ const Login = ({navigation}) => {
       //console.log(data.token)
       apiClient.setToken(data.token)
     
-      navigation.navigate("ProfilePage")
+      navigation.navigate("TabNavigator")
     }else{
       setModalVisible(true)
     }

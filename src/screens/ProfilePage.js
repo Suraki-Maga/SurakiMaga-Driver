@@ -4,14 +4,16 @@ import apiClient from '../Services/apiClient'
 import { Icon } from 'react-native-elements'
 import { colors,parameters } from '../globals/styles'
 
+
+
 const ProfilePage = ({navigation}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [errors, setErrors] = useState({})
     const [fetchData,setFetchData]=useState({
         name:"john Doe",
-        location:"ICC Complex,Piliyandala",
-        location1:"D.S. Senanayake College,Colombo",
-        location2:"Royal College,Colombo"
+        contact:"xxxxxxxxxx",
+        licenceno:"xxxxxxx",
+        nic:"xxxxxxxxx"
     })
     
     useEffect(() => {
@@ -30,24 +32,22 @@ const ProfilePage = ({navigation}) => {
             const{data,error}=await apiClient.loadDetails()
             console.log(data)
 
-            setFetchData({ name:data.result.fullname })
+            setFetchData({ name:data.result.fullname,contact:data.result.contact,licenceno:data.result.licenceno,nic:data.result.nic })
 
         }
     
         getKind();
     }, []);
+    const logout =()=>{
+        console.log("function called")
+        apiClient.removeToken()
+        navigation.navigate("LandingPage")
+    }
 
   return (
     <View style={styles.container}>
         <View style={styles.header}>
             <View style={styles.leftSideOfHeader}>
-                <TouchableOpacity style={styles.icon1}> 
-                    <Icon type="material-community"
-                        name="menu"
-                        color={colors.orange}
-                        size={40} />
-                </TouchableOpacity>
-
                 <Image source={require('../../assets/images/logo.jpg')} style={styles.logo}/> 
             </View>
             <View style={styles.rightSideOfHeader}>
@@ -66,37 +66,20 @@ const ProfilePage = ({navigation}) => {
                 <Image source={require('../../assets/images/profilePic.jpg')} style={styles.profilePicBig}/> 
                 <View style={styles.nameAndEdit}>
                     <Text style={styles.nameContainer}>{fetchData.name}</Text>
-                    <TouchableOpacity style={styles.button1}><Text style={styles.button1Text}>edit profie</Text></TouchableOpacity>
                 </View>
             </View>
-            <Text style={styles.topic}>Today's Trip</Text>
-                <Text style={styles.locationText1}>Starting Point</Text>
-                <TouchableOpacity style={styles.location}>
-                <Icon type="material-community"
-                        name="map-marker"
-                        color={colors.grey}
-                        size={30} />
-                <Text style={styles.locationText2}>{fetchData.location}</Text>
-                </TouchableOpacity>
-            
-                <Text style={styles.locationText1}>Ending Point</Text>
-                <TouchableOpacity style={styles.location}>
-                <Icon type="material-community"
-                        name="map-marker"
-                        color={colors.grey}
-                        size={30} />
-                <Text style={styles.locationText2}>{fetchData.location1}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.location}>
-                <Icon type="material-community"
-                        name="map-marker"
-                        color={colors.grey}
-                        size={30} />
-                <Text style={styles.locationText2}>{fetchData.location2}</Text>
-                </TouchableOpacity>
-                <View style={styles.nameBox2}>
-                    <TouchableOpacity style={styles.button2}><Text style={styles.button2Text}>Morning student list</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.button2}><Text style={styles.button2Text}>Evening student list</Text></TouchableOpacity>
+            <View style={styles.nameBox2}>
+                <View style={styles.informationTopic}><Text style={styles.informationTopicText}>Information</Text></View>
+                <View style={styles.informationBody}>
+                    <View style={styles.informationDetail}><Text style={styles.informationDetailText}>Contact</Text><Text style={styles.informationDetailText}>{fetchData.contact}</Text></View>
+                    <View style={styles.informationDetail}><Text style={styles.informationDetailText}>Licence No</Text><Text style={styles.informationDetailText}>{fetchData.licenceno}</Text></View>
+                    <View style={styles.informationDetail}><Text style={styles.informationDetailText}>NIC</Text><Text style={styles.informationDetailText}>{fetchData.nic}</Text></View>
+                </View>
+            </View>
+
+                <View style={styles.nameBox3}>
+                    
+                    <TouchableOpacity style={styles.button2} onPress={logout}><Text style={styles.button2Text}>Log out</Text></TouchableOpacity>
                 </View>
 
         </ScrollView>
@@ -168,19 +151,19 @@ const styles = StyleSheet.create({
     },
     nameBox:{
         display:'flex',
-        flexDirection:'row',
         backgroundColor:colors.orange,
         width:parameters.SCREEN_WIDTH*11/12,
-        height:parameters.SCREEN_HEIGHT/4,
+        height:parameters.SCREEN_HEIGHT/3,
         alignItems:'center',
         marginTop:'4%',
+        paddingTop:'5%',
         borderRadius:10,
         justifyContent:'space-around',
     },
     profilePicBig:{
-        width:100,
-        height:100,
-        borderRadius:50
+        width:170,
+        height:170,
+        borderRadius:100
     },
     nameAndEdit:{
         height:parameters.SCREEN_HEIGHT/10,
@@ -188,6 +171,7 @@ const styles = StyleSheet.create({
     },
     nameContainer:{
         fontFamily:'sans-serif-medium',
+        marginTop:'3%',
         fontSize:25,
         color:'white'
     },
@@ -212,45 +196,65 @@ const styles = StyleSheet.create({
         fontSize:40,
         fontFamily:'sans-serif-medium',
     },
-    location:{
-        width:parameters.SCREEN_WIDTH*2/3,
-        display:'flex',
-        marginTop:'2%',
-        marginBottom:'2%',
-        borderRadius:5,
-        flexDirection:'row',
-        backgroundColor:'white',
-        alignItems:'center',
-        shadowColor: '#ffffff',
-        shadowOffset: {width: 6, height: 3},
-        shadowOpacity: 0.4,
-        shadowRadius: 2,
-    },
-    locationText1:{
-        fontFamily:'sans-serif-medium',
-        fontSize:20,
-        marginTop:'4%',
-        marginBottom:'4%',
-    },
-    locationText2:{
-        fontFamily:'sans-serif-medium',
-        fontSize:15,
-    },
     button2:{
         height:45,
         width:240,
         backgroundColor:'white',
         borderRadius:20,
+        borderWidth: 2,
+        borderColor:colors.orange,
         alignItems:"center",
         justifyContent:"center",
     },
     nameBox2:{
         display:'flex',
-        backgroundColor:colors.orange,
+        backgroundColor:colors.midBoxWhite,
         width:parameters.SCREEN_WIDTH*11/12,
         height:parameters.SCREEN_HEIGHT/4,
         alignItems:'center',
-        marginTop:'4%',
+        marginTop:'7%',
+        borderRadius:10,
+    },
+    informationTopic:{
+        display:'flex',
+        borderRadius:10,
+        width:'85%',
+        height:'30%',
+        justifyContent:'center',
+        borderBottomColor: 'grey',
+        borderBottomWidth: 2,
+
+    },
+    informationTopicText:{
+        color:colors.grey,
+        fontWeight:'bold',
+        fontSize:20,
+    },
+    informationDetailText:{
+        color:colors.grey,
+        fontSize:18,
+    },
+    informationBody:{
+        display:'flex',
+        borderRadius:10,
+        width:'100%',
+        height:'70%',
+        alignItems:'center',
+        justifyContent:'space-evenly' 
+    },
+    informationDetail:{
+        display:'flex',
+        width:'85%',
+        flexDirection:'row',
+        justifyContent:'space-between'
+    },
+    nameBox3:{
+        display:'flex',
+        backgroundColor:colors.white,
+        width:parameters.SCREEN_WIDTH*11/12,
+        height:parameters.SCREEN_HEIGHT/12,
+        alignItems:'center',
+        marginTop:'5%',
         borderRadius:10,
         justifyContent:'space-evenly',
     },
