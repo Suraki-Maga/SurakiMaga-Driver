@@ -8,9 +8,12 @@ import Signup from './src/screens/Signup';
 import Verification from './src/screens/Verification';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as SecureStore from 'expo-secure-store';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import TabNavigator from './src/navigations/TabNavigator';
+
 
 const Stack = createNativeStackNavigator();
+
 export default function App() {
 
   return (
@@ -21,10 +24,11 @@ export default function App() {
         <Stack.Screen name="Registration" component={Registration} /> 
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Verification" component={Verification} />
-        <Stack.Screen name="ProfilePage" component={ProfilePage} />
-      </Stack.Navigator>  
+        <Stack.Screen name="TabNavigator" component={TabNavigator} />
+      </Stack.Navigator> 
+      
     </NavigationContainer>
-    // <Registration/>
+    
       
   );
 }
