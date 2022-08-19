@@ -69,6 +69,9 @@ class ApiClient{
     async loadDetails(){
         return await this.request({ endpoint: `driverauth/details`, method: `GET`})
     }
+    async loadStudentLocations(){
+        return await this.request({ endpoint: `driverauth/studentLocations`, method: `GET`})
+    }
 }
 
 
