@@ -21,15 +21,16 @@ const TabNavigator = () => {
         height:70,
         ...styles.shadow
       }
-    }}>
+      
+    }} initialRouteName="Map">
         <Tab.Screen name="ProfilePage" component={ProfilePage} options={{
           tabBarIcon:({focused})=>(
             <View style={{alignItems:'center',justifyContent:'center'}}>
               <Image
                 source={require('../../assets/images/profileicon.png')}
-                style={{ width:25, height:25, tintColor: focused ? colors.orange : '748c94'}}
+                style={{ width:focused? 35:25, height:focused? 35:25, tintColor: focused ? colors.orange : '#748c94'}}
               />
-              <Text style={{color: focused ? colors.orange : '748c94'}}>Profile</Text>
+              <Text style={{color: focused ? colors.orange : '#748c94'}}>Profile</Text>
             </View> 
           )
         }}/>
@@ -37,10 +38,10 @@ const TabNavigator = () => {
           tabBarIcon:({focused})=>(
             <View style={{alignItems:'center',justifyContent:'center'}}>
               <Image
-                source={require('../../assets/images/profileicon.png')}
-                style={{ width:25, height:25, tintColor: focused ? colors.orange : '748c94'}}
+                source={require('../../assets/images/mapicon.png')}
+                style={{ width:focused? 35:25, height:focused? 35:25, tintColor: focused ? colors.orange : '#748c94'}}
               />
-              <Text style={{color: focused ? colors.orange : '748c94'}}>Map</Text>
+              <Text style={{color: focused ? colors.orange : '#748c94'}}>Map</Text>
             </View> 
           )
         }} />
@@ -48,10 +49,10 @@ const TabNavigator = () => {
           tabBarIcon:({focused})=>(
             <View style={{alignItems:'center',justifyContent:'center'}}>
               <Image
-                source={require('../../assets/images/profileicon.png')}
-                style={{ width:25, height:25, tintColor: focused ? colors.orange : '748c94'}}
+                source={require('../../assets/images/schoolvanicon.png')}
+                style={{ width:focused? 35:25, height:focused? 35:25, tintColor: focused ? colors.orange : '#748c94'}}
               />
-              <Text style={{color: focused ? colors.orange : '748c94'}}>School Van</Text>
+              <Text style={{color: focused ? colors.orange : '#748c94'}}>School Van</Text>
             </View> 
           )
         }}/>
