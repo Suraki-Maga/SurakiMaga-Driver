@@ -99,7 +99,7 @@ const Map = () => {
             coordinate={{latitude:parseFloat(data.latitude),longitude:parseFloat(data.longitude)}} pinColor='green'
             >
               <Image style={{width:50,height:50,resizeMode:'contain'}} source={require('../../assets/images/studentmap.png')}/>
-              <Callout><Text>Faalil's Palace</Text></Callout>
+              <Callout><Text>Text data</Text></Callout>
               </Marker> }
             )}
             {/* <Marker  
