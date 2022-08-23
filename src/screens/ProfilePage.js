@@ -98,13 +98,24 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     header:{
+        marginTop:parameters.statusBarHeight,
         display:"flex",
         flexDirection:"row",
-        backgroundColor:colors.white,
+        backgroundColor:colors.midBoxWhite,
         height:parameters.headerHeight,
+        borderRadius:10,
         alignItems:"center",
-        width:parameters.SCREEN_WIDTH,
-        justifyContent:'space-between'
+        width:parameters.SCREEN_WIDTH*9/10,
+        justifyContent:'space-between',
+        shadowColor:'#7F5DF0',
+        shadowOffset:{
+          width:0,
+          height:10,
+        },
+        shadowOpacity:0.25,
+        shadowRadius:3.5,
+        elevation:5
+    
         // height:parameters.SCREEN_HEIGHT/7,
     },
     leftSideOfHeader:{
@@ -126,7 +137,7 @@ const styles = StyleSheet.create({
         borderRadius:50
     },
     logo:{
-        
+        marginLeft:20,
         width:parameters.SCREEN_WIDTH*1/8,
         height:parameters.SCREEN_HEIGHT*0.5/8
     },
@@ -153,12 +164,20 @@ const styles = StyleSheet.create({
         display:'flex',
         backgroundColor:colors.orange,
         width:parameters.SCREEN_WIDTH*11/12,
-        height:parameters.SCREEN_HEIGHT/3,
+        height:parameters.SCREEN_HEIGHT/3.2,
         alignItems:'center',
         marginTop:'4%',
         paddingTop:'5%',
         borderRadius:10,
         justifyContent:'space-around',
+        shadowColor:'#7F5DF0',
+        shadowOffset:{
+          width:0,
+          height:10,
+        },
+        shadowOpacity:0.25,
+        shadowRadius:3.5,
+        elevation:5
     },
     profilePicBig:{
         width:170,
@@ -173,7 +192,16 @@ const styles = StyleSheet.create({
         fontFamily:'sans-serif-medium',
         marginTop:'3%',
         fontSize:25,
-        color:'white'
+        color:'white',
+        shadowColor:'#7F5DF0',
+        shadowOffset:{
+          width:0,
+          height:10,
+        },
+        shadowOpacity:0.25,
+        shadowRadius:3.5,
+        elevation:5
+        
     },
     button1:{
         height:35,
@@ -214,6 +242,14 @@ const styles = StyleSheet.create({
         alignItems:'center',
         marginTop:'7%',
         borderRadius:10,
+        shadowColor:'#7F5DF0',
+        shadowOffset:{
+          width:0,
+          height:10,
+        },
+        shadowOpacity:0.25,
+        shadowRadius:3.5,
+        elevation:5
     },
     informationTopic:{
         display:'flex',

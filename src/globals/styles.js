@@ -3,7 +3,9 @@ import  {getStatusBarHeight}  from 'react-native-status-bar-height';
 import { Dimensions } from 'react-native';
 export const colors={
     orange:'#FF8C01',
+
     grey:'#28231F',
+    grey2:'#748c94',
     white:'#f2f2f2',
     font:'#090807',
     midBoxWhite:'#ffffff'

@@ -1,18 +1,23 @@
-import { StyleSheet, Text, View,TouchableOpacity,Image, ScrollView} from 'react-native'
+import { StyleSheet, Text, View,TouchableOpacity,Image, ScrollView,StatusBar} from 'react-native'
 import apiClient from '../Services/apiClient'
 import { Icon } from 'react-native-elements'
 import { colors,parameters } from '../globals/styles'
 import React, { useState, useEffect } from 'react';
+import Slideshow from 'react-native-image-slider-show';
 
-const SchoolVan = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+const SchoolVan = ({navigation}) => {
+    const [modalVisible, setModalVisible] = useState(false);
     const [errors, setErrors] = useState({})
-    const [fetchData,setFetchData]=useState({
-        name:"john Doe",
-        location:"ICC Complex,Piliyandala",
-        location1:"D.S. Senanayake College,Colombo",
-        location2:"Royal College,Colombo"
-    })
+    useEffect(() => {
+        apiClient.getToken().then(data => data).then(value => {
+            if(value==""){
+                navigation.navigate("Login")
+            }else{
+                apiClient.setToken(value)
+            }
+        })
+        .catch(err => console.log(err))
+    });
     
 
   return (
@@ -33,44 +38,61 @@ const SchoolVan = () => {
         </View>
         <ScrollView style={styles.scrollview}
         showsVerticalScrollIndicator={false}>
-            <View style={styles.nameBox}>
-                <Image source={require('../../assets/images/profilePic.jpg')} style={styles.profilePicBig}/> 
-                <View style={styles.nameAndEdit}>
-                    <Text style={styles.nameContainer}>{fetchData.name}</Text>
-                    <TouchableOpacity style={styles.button1}><Text style={styles.button1Text}>edit profie</Text></TouchableOpacity>
+            <View style={styles.nameView}>
+                <Text style={styles.title}>School Van</Text>
+            </View>
+            
+            <Slideshow 
+            containerStyle={styles.slideshow}
+            overlay={true}
+            dataSource={[
+                { url:require('../../assets/database/image_30dd1ca8d9.jpg') },
+                { url:require('../../assets/database/z_p06-god-01.jpg') }   
+            ]}/>
+            <View style={styles.nameBox2}>
+                <View style={styles.informationTopic}><Text style={styles.informationTopicText}>Information</Text></View>
+                <View style={styles.informationBody}>
+                    <View style={styles.informationDetail}><Text style={styles.informationDetailText}>Vehicle No</Text><Text style={styles.informationDetailText}>PA - 2587</Text></View>
+                    <View style={styles.informationDetail}><Text style={styles.informationDetailText}>Owner</Text><Text style={styles.informationDetailText}>Sadeepa Bhashitha</Text></View>
+                    <View style={styles.informationDetail}><Text style={styles.informationDetailText}>No of Seats</Text><Text style={styles.informationDetailText}>18</Text></View>
                 </View>
             </View>
-            <Text style={styles.topic}>Today's Trip</Text>
-                <Text style={styles.locationText1}>Starting Point</Text>
-                <TouchableOpacity style={styles.location}>
-                <Icon type="material-community"
-                        name="map-marker"
-                        color={colors.grey}
-                        size={30} />
-                <Text style={styles.locationText2}>ICC Complex,Piliyandala</Text>
-                </TouchableOpacity>
-            
-                <Text style={styles.locationText1}>Ending Point</Text>
-                <TouchableOpacity style={styles.location}>
-                <Icon type="material-community"
-                        name="map-marker"
-                        color={colors.grey}
-                        size={30} />
-                <Text style={styles.locationText2}>D.S. Senanayake College,Colombo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.location}>
-                <Icon type="material-community"
-                        name="map-marker"
-                        color={colors.grey}
-                        size={30} />
-                <Text style={styles.locationText2}>Royal College,Colombo</Text>
-                </TouchableOpacity>
-                <View style={styles.nameBox2}>
-                    <TouchableOpacity style={styles.button2}><Text style={styles.button2Text}>Morning student list</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.button2}><Text style={styles.button2Text}>Evening student list</Text></TouchableOpacity>
+
+            <View style={styles.nameBox2}>
+                <View style={styles.informationTopic}><Text style={styles.informationTopicText}>Today Trip</Text></View>
+                <View style={styles.informationBody}>
+                    <View style={styles.informationDetail}><Text style={styles.informationDetailText}>Destination 1</Text></View>
+                    <TouchableOpacity style={styles.informationDetail2}>
+                        <Icon type="material-community"
+                                name="map-marker"
+                                color={colors.grey2}
+                                size={30} />
+                        <Text style={styles.informationDetailText2}>D.S. Senanayake College</Text>
+                    </TouchableOpacity>
+                    <View style={styles.informationDetail}><Text style={styles.informationDetailText}>Destination 2</Text></View>
+                    <TouchableOpacity style={styles.informationDetail2}>
+                        <Icon type="material-community"
+                                name="map-marker"
+                                color={colors.grey2}
+                                size={30} />
+                        <Text style={styles.informationDetailText2}>Vishaka College</Text>
+                    </TouchableOpacity>
+                        
                 </View>
+            </View>
+            <View style={styles.nameBox3}>
+                <TouchableOpacity style={styles.button2} onPress={()=>navigation.navigate("StudentList")}>
+                <Image style={{width:20,height:20,resizeMode:'cover',tintColor:colors.orange,marginRight:5}} source={require('../../assets/images/list-icon.png')}/>
+                    <Text style={styles.button2Text}>Morning student list</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button2}>
+                    <Image style={{width:20,height:20,resizeMode:'cover',tintColor:colors.orange,marginRight:5}} source={require('../../assets/images/list-icon.png')}/>
+                    <Text style={styles.button2Text}>Evening student list</Text>
+                </TouchableOpacity>
+            </View>
 
         </ScrollView>
+
     </View>
   )
 }
@@ -86,27 +108,51 @@ const styles = StyleSheet.create({
     alignItems:'center'
 },
 header:{
+    position:'absolute',
+    top:30,
+    elevation:10,
+    zIndex:1000,
+    marginTop:parameters.statusBarHeight,
     display:"flex",
     flexDirection:"row",
-    backgroundColor:colors.white,
+    backgroundColor:colors.midBoxWhite,
     height:parameters.headerHeight,
+
+    borderRadius:10,
     alignItems:"center",
-    width:parameters.SCREEN_WIDTH,
-    justifyContent:'space-between'
+    width:parameters.SCREEN_WIDTH*9/10,
+    justifyContent:'space-between',
+    shadowColor:'#7F5DF0',
+    shadowOffset:{
+      width:0,
+      height:10,
+    },
+    shadowOpacity:0.25,
+    shadowRadius:3.5,
+    elevation:5
+
     // height:parameters.SCREEN_HEIGHT/7,
 },
 leftSideOfHeader:{
-  display:'flex',
-  flexDirection:'row',
-  alignItems:'center',
-//   paddingLeft:parameters.SCREEN_WIDTH/20
-    
-},
-rightSideOfHeader:{
     display:'flex',
     flexDirection:'row',
     alignItems:'center',
-    paddingRight:parameters.SCREEN_WIDTH/20
+  //   paddingLeft:parameters.SCREEN_WIDTH/20
+      
+  },
+  rightSideOfHeader:{
+      display:'flex',
+      flexDirection:'row',
+      alignItems:'center',
+      paddingRight:parameters.SCREEN_WIDTH/20
+  },
+  icon2:  {
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"center",
+    alignItems:"center",
+    width:80,
+    height:100,
 },
 profilePicSmall:{
     width:50,
@@ -114,100 +160,120 @@ profilePicSmall:{
     borderRadius:50
 },
 logo:{
-    
+    marginLeft:20,
     width:parameters.SCREEN_WIDTH*1/8,
     height:parameters.SCREEN_HEIGHT*0.5/8
 },
-icon1:  {
-    display:"flex",
-    flexDirection:"row",
-    justifyContent:"center",
-    alignItems:"center",
-    width:80,
-    height:100,
-},
-icon2:  {
-    display:"flex",
-    flexDirection:"row",
-    justifyContent:"center",
-    alignItems:"center",
-    width:80,
-    height:100,
-},
 scrollview:{
-    marginBottom:20
-},
-nameBox:{
     display:'flex',
-    flexDirection:'row',
-    backgroundColor:colors.orange,
-    width:parameters.SCREEN_WIDTH*11/12,
-    height:parameters.SCREEN_HEIGHT/4,
-    alignItems:'center',
-    marginTop:'4%',
+    marginBottom:20,
+},
+slideshow:{
+    alignSelf:'center',
+    width:parameters.SCREEN_WIDTH,
+    height:parameters.SCREEN_HEIGHT*1/4,
     borderRadius:10,
-    justifyContent:'space-around',
+    backgroundColor:colors.orange
 },
-profilePicBig:{
-    width:100,
-    height:100,
-    borderRadius:50
+nameView:{
+    marginTop:parameters.SCREEN_HEIGHT/6,
+    display:'flex',
+    width:parameters.SCREEN_WIDTH,
+    height:parameters.SCREEN_HEIGHT/8,
+    
+    justifyContent:'center',
+    alignItems:'center'
 },
-nameAndEdit:{
-    height:parameters.SCREEN_HEIGHT/10,
-    justifyContent:'space-between'
-},
-nameContainer:{
-    fontFamily:'sans-serif-medium',
-    fontSize:25,
-    color:'white'
-},
-button1:{
-    height:35,
-    width:110,
-    backgroundColor:'white',
-    borderRadius:20,
-    alignItems:"center",
-    justifyContent:"center",
-    // marginTop:50
-},
-button1Text:{
-    color:colors.orange,
-    fontSize:20,
+title:{
+    color:colors.font,
+    fontSize:30,
     fontFamily:'sans-serif-medium',
     marginTop:-2
 },
-topic:{
-    marginTop:parameters.SCREEN_HEIGHT/25,
-    marginBottom:parameters.SCREEN_HEIGHT/45,
-    fontSize:40,
-    fontFamily:'sans-serif-medium',
-},
-location:{
-    width:parameters.SCREEN_WIDTH*2/3,
+nameBox2:{
     display:'flex',
-    marginTop:'2%',
-    marginBottom:'2%',
-    borderRadius:5,
-    flexDirection:'row',
-    backgroundColor:'white',
+    backgroundColor:colors.midBoxWhite,
+    alignSelf:'center',
+    width:parameters.SCREEN_WIDTH*11/12,
+    height:parameters.SCREEN_HEIGHT/4,
     alignItems:'center',
-    shadowColor: '#ffffff',
-    shadowOffset: {width: 6, height: 3},
-    shadowOpacity: 0.4,
-    shadowRadius: 2,
+    marginTop:'7%',
+    borderRadius:10,
+    shadowColor:'#7F5DF0',
+    shadowOffset:{
+      width:0,
+      height:10,
+    },
+    shadowOpacity:0.25,
+    shadowRadius:3.5,
+    elevation:5
 },
-locationText1:{
-    fontFamily:'sans-serif-medium',
+nameBox3:{
+    display:'flex',
+    backgroundColor:colors.orange,
+    alignSelf:'center',
+    width:parameters.SCREEN_WIDTH*11/12,
+    height:parameters.SCREEN_HEIGHT/5,
+    alignItems:'center',
+    justifyContent:'space-evenly',
+    marginTop:'7%',
+    marginBottom:parameters.SCREEN_HEIGHT/8,
+    borderRadius:10,
+    shadowColor:'#7F5DF0',
+    shadowOffset:{
+      width:0,
+      height:10,
+    },
+    shadowOpacity:0.25,
+    shadowRadius:3.5,
+    elevation:5
+},
+informationTopic:{
+    display:'flex',
+    borderRadius:10,
+    width:'85%',
+    height:'30%',
+    justifyContent:'center',
+    borderBottomColor: 'grey',
+    borderBottomWidth: 2,
+
+},
+informationTopicText:{
+    color:colors.grey,
+    fontWeight:'bold',
     fontSize:20,
-    marginTop:'4%',
-    marginBottom:'4%',
 },
-locationText2:{
-    fontFamily:'sans-serif-medium',
-    fontSize:15,
+informationDetailText:{
+    color:colors.grey,
+    fontSize:18,
+},
+informationDetailText2:{
+    color:colors.grey2,
+    fontSize:18,
+},
+informationBody:{
+    display:'flex',
+    borderRadius:10,
+    width:'100%',
+    height:'70%',
+    alignItems:'center',
+    justifyContent:'space-evenly' 
+},
+informationDetail:{
+    display:'flex',
+    width:'85%',
+    flexDirection:'row',
+    justifyContent:'space-between'
+},
+informationDetail2:{
+    display:'flex',
+    width:'85%',
+    flexDirection:'row',
+    alignItems:'center'
 },
 button2:{
+    display:'flex',
+    flexDirection:'row',
     height:45,
     width:240,
     backgroundColor:'white',
@@ -215,20 +281,11 @@ button2:{
     alignItems:"center",
     justifyContent:"center",
 },
-nameBox2:{
-    display:'flex',
-    backgroundColor:colors.orange,
-    width:parameters.SCREEN_WIDTH*11/12,
-    height:parameters.SCREEN_HEIGHT/4,
-    alignItems:'center',
-    marginTop:'4%',
-    borderRadius:10,
-    justifyContent:'space-evenly',
-},
 button2Text:{
     color:colors.orange,
     fontSize:22,
     fontFamily:'sans-serif-medium',
     marginTop:-2
 },
+
 })

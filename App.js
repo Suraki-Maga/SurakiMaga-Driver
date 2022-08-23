@@ -10,6 +10,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TabNavigator from './src/navigations/TabNavigator';
+import StudentList from './src/screens/StudentList';
 
 
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,7 @@ export default function App() {
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Verification" component={Verification} />
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        <Stack.Screen name="StudentList" component={StudentList} />
       </Stack.Navigator> 
       
     </NavigationContainer>
