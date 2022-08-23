@@ -98,6 +98,7 @@ const Registration = ({navigation}) => {
         <TouchableOpacity style ={styles.button} onPress={handleOnSubmit}>
             <Text style={styles.buttonText}>Verify me</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.textLink}  onPress={() => navigation.navigate('Login')}><Text>Already have an account?</Text></TouchableOpacity>
         {/* </ScrollView> */}  
         <View style={styles.footer}>
                 <TouchableOpacity><Text style={styles.footerText}>Terms & conditions</Text></TouchableOpacity>
@@ -259,7 +260,11 @@ const styles = StyleSheet.create({
         },
         errorText:{
           color:errors.fontColor
-        }
+        },
+        textLink: {
+          marginTop: 15,
+          opacity: 0.4
+        },
           
         
         

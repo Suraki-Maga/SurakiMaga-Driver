@@ -7,6 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 const Signup = ({ route,navigation }) => {
   const [errors, setErrors] = useState({})
+  const [formError, setFormError] = useState(null)
   const [form, setForm] = useState({
     id: route.params.id,
     fullName: route.params.fullName,
@@ -17,16 +18,26 @@ const Signup = ({ route,navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const handleOnSubmit = async () => {
     setErrors((e) => ({ ...e, form: null }))
-    const { data, error } = await apiClient.sendOtp({
-      id:form.id,
-      userName:form.userName
-    })
-    // console.log(data.respond)
-    // data.respond="taken"
-    if(data.respond!="taken"){
-      navigation.navigate("Verification",{id:form.id,userName:form.userName,password:form.password})
+    if(form.userName=="" || form.password==""){
+      let msg="User name and password field can't be empty. :("
+      setFormError(msg)
+    }else if(form.password.length<8){
+      let msg="Password length should be atleast 8 :)"
+      setFormError(msg)
     }else{
-      setModalVisible(true)
+      let msg=null
+      setFormError(msg)
+      const { data, error } = await apiClient.sendOtp({
+        id:form.id,
+        userName:form.userName
+      })
+      // console.log(data.respond)
+      // data.respond="taken"
+      if(data.respond!="taken"){
+        navigation.navigate("Verification",{id:form.id,userName:form.userName,password:form.password})
+      }else{
+        setModalVisible(true)
+      }
     }
 
   }
@@ -84,11 +95,13 @@ const Signup = ({ route,navigation }) => {
           left={<TextInput.Icon name="lock" />}
           right={<TextInput.Icon name="eye" />}
         />
+        <View style={styles.noticeMsg}>
+          <Text style={styles.noticeMsgText}>{formError}</Text>
+        </View>
         <View style={styles.buttonSet}>
           <TouchableOpacity style={styles.button} onPress={handleOnSubmit}>
             <Text style={styles.buttonText}>Sign up</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.textLink}  onPress={() => navigation.navigate('Login')}><Text>Already have an account?</Text></TouchableOpacity>
         </View>
 
       </View>
@@ -218,11 +231,11 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   button: {
-    height: 40,
-    width: parameters.SCREEN_WIDTH * 2.5 / 6,
+    height: 50,
+    width: parameters.SCREEN_WIDTH * 4/ 6,
     backgroundColor: colors.orange,
     borderRadius: 20,
-    alignSelf: "flex-start",
+    alignSelf: "center",
     justifyContent: "center",
     marginTop: 20,
     marginBottom: 20
@@ -264,8 +277,25 @@ const styles = StyleSheet.create({
     opacity: 0.4
   },
   buttonSet: {
-    display: 'flex',
+    display:'flex',
+    alignSelf:'center',
+    width:parameters.SCREEN_WIDTH * 5 / 6,
+    paddingLeft: parameters.SCREEN_WIDTH / 20,
+    flexDirection:'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent:'space-around',
+  },
+  noticeMsg:{
+    marginTop:5,
+    marginBottom:5,
+    display:'flex',
+    width:parameters.SCREEN_WIDTH * 5/ 6,
+    alignItems:'center',
+  },
+  noticeMsgText:{
+    color:'red',
+    fontSize:15,
+
   }
+
 })

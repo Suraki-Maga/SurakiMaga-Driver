@@ -72,9 +72,13 @@ class ApiClient{
     async loadStudentLocations(){
         return await this.request({ endpoint: `driverauth/studentLocations`, method: `GET`})
     }
+    async getSpecificStudent(credentials){
+        console.log(credentials)
+        return await this.request({ endpoint: `driverauth/studentDetails`, method: `POST`,  data:credentials })
+    } 
 }
 
 
-const API = new ApiClient(process.env.REACT_APP_REMOTE_HOST_URL || "http://192.168.1.11:3001")
+const API = new ApiClient(process.env.REACT_APP_REMOTE_HOST_URL || "http://10.22.166.227:3001")
 
 export default API
