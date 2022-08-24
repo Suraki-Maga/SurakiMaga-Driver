@@ -11,15 +11,16 @@ import apiClient from "../Services/apiClient";
 import { Icon } from "react-native-elements";
 import { colors, parameters } from "../globals/styles";
 import Header from "../context/Header";
+import { color } from "react-native-reanimated";
 
 const ProfilePage = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [errors, setErrors] = useState({});
   const [fetchData, setFetchData] = useState({
-    name: "john Doe",
-    contact: "xxxxxxxxxx",
-    licenceno: "xxxxxxx",
-    nic: "xxxxxxxxx",
+    name: "",
+    contact: "",
+    licenceno: "",
+    nic: "",
   });
 
   useEffect(() => {
@@ -79,6 +80,17 @@ const ProfilePage = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.nameBox}>
+          <TouchableOpacity
+            style={styles.editprofileBtn}
+            onPress={() =>
+              navigation.navigate("EditProfile", { contact: fetchData.contact })
+            }
+          >
+            <Image
+              source={require("../../assets/images/editicon.png")}
+              style={styles.editIcon}
+            />
+          </TouchableOpacity>
           <Image
             source={require("../../assets/images/profilePic.jpg")}
             style={styles.profilePicBig}
@@ -213,17 +225,20 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   profilePicBig: {
-    width: 170,
-    height: 170,
+    width: 160,
+    height: 160,
     borderRadius: 100,
   },
   nameAndEdit: {
+    display: "flex",
     height: parameters.SCREEN_HEIGHT / 10,
-    justifyContent: "space-between",
+    width: (parameters.SCREEN_WIDTH * 2.5) / 4,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   nameContainer: {
     fontFamily: "sans-serif-medium",
-    marginTop: "3%",
     fontSize: 25,
     color: "white",
     shadowColor: "#7F5DF0",
@@ -330,5 +345,21 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: "sans-serif-medium",
     marginTop: -2,
+  },
+  editprofileBtn: {
+    alignSelf: "flex-end",
+    marginRight: 10,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 35,
+    height: 35,
+    backgroundColor: colors.midBoxWhite,
+    borderRadius: 10,
+  },
+  editIcon: {
+    width: 20,
+    height: 20,
+    tintColor: colors.orange,
   },
 });
