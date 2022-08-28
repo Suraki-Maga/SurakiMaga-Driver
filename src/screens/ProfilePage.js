@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   Image,
+  Switch,
   ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -98,6 +99,13 @@ const ProfilePage = ({ navigation }) => {
           <View style={styles.nameAndEdit}>
             <Text style={styles.nameContainer}>{fetchData.name}</Text>
           </View>
+        </View>
+        <View style={styles.allocation}>
+          <Text style={styles.allocationText}>I'm ready to work</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={"#f4f3f4"}
+          />
         </View>
         <View style={styles.nameBox2}>
           <View style={styles.informationTopic}>
@@ -280,6 +288,7 @@ const styles = StyleSheet.create({
     borderColor: colors.orange,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 50,
   },
   nameBox2: {
     display: "flex",
@@ -337,6 +346,7 @@ const styles = StyleSheet.create({
     height: parameters.SCREEN_HEIGHT / 12,
     alignItems: "center",
     marginTop: "5%",
+    marginBottom: parameters.SCREEN_HEIGHT / 8,
     borderRadius: 10,
     justifyContent: "space-evenly",
   },
@@ -361,5 +371,19 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     tintColor: colors.orange,
+  },
+  allocation: {
+    alignSelf: "center",
+    marginTop: 40,
+    display: "flex",
+    flexDirection: "row",
+    height: 50,
+    alignItems: "center",
+    width: (parameters.SCREEN_WIDTH * 4) / 6,
+    justifyContent: "space-between",
+  },
+  allocationText: {
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });

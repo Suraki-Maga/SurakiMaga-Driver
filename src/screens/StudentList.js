@@ -21,7 +21,7 @@ const StudentList = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.nameView}>
-          <Text style={styles.title}>Morning Student List</Text>
+          <Text style={styles.title}>Evening Student List</Text>
         </View>
         <TouchableOpacity style={styles.studentNameContainer}>
           <View style={styles.studentProfilePic}>
@@ -35,15 +35,14 @@ const StudentList = ({ navigation }) => {
               <Text style={styles.nameText}>Prasad Lakshan</Text>
             </View>
             <View style={styles.status}>
-              <Text style={styles.statusText}>Status</Text>
-              <Text style={styles.statusText}>Present</Text>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>In vehicle</Text>
             </View>
           </View>
           <View style={styles.rightSide}>
-            <Image
-              source={require("../../assets/images/sideArrow.png")}
-              style={styles.sideArrow}
-            />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.studentNameContainer}>
@@ -55,18 +54,17 @@ const StudentList = ({ navigation }) => {
           </View>
           <View style={styles.nameAndStatus}>
             <View style={styles.name}>
-              <Text style={styles.nameText}>Asitha Muthumala</Text>
+              <Text style={styles.nameText}>Sahan Perera</Text>
             </View>
             <View style={styles.status}>
-              <Text style={styles.statusText}>Status</Text>
-              <Text style={styles.statusText}>Present</Text>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>Has to pick</Text>
             </View>
           </View>
           <View style={styles.rightSide}>
-            <Image
-              source={require("../../assets/images/sideArrow.png")}
-              style={styles.sideArrow}
-            />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.studentNameContainer}>
@@ -78,19 +76,17 @@ const StudentList = ({ navigation }) => {
           </View>
           <View style={styles.nameAndStatus}>
             <View style={styles.name}>
-              <Text style={styles.nameText}>Nishamal Perera</Text>
+              <Text style={styles.nameText}>Sasitha Kumara</Text>
             </View>
             <View style={styles.status}>
-              <Text style={styles.statusText}>Status</Text>
-              <Text style={styles.statusText}>Present</Text>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>In vehicle</Text>
             </View>
           </View>
-
           <View style={styles.rightSide}>
-            <Image
-              source={require("../../assets/images/sideArrow.png")}
-              style={styles.sideArrow}
-            />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.studentNameContainer}>
@@ -102,19 +98,17 @@ const StudentList = ({ navigation }) => {
           </View>
           <View style={styles.nameAndStatus}>
             <View style={styles.name}>
-              <Text style={styles.nameText}>Akila Dissanayake</Text>
+              <Text style={styles.nameText}>Thisara Perera</Text>
             </View>
             <View style={styles.status}>
-              <Text style={styles.statusText}>Status</Text>
-              <Text style={styles.statusText}>Present</Text>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>Has to pick</Text>
             </View>
           </View>
-
           <View style={styles.rightSide}>
-            <Image
-              source={require("../../assets/images/sideArrow.png")}
-              style={styles.sideArrow}
-            />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.studentNameContainer}>
@@ -126,18 +120,17 @@ const StudentList = ({ navigation }) => {
           </View>
           <View style={styles.nameAndStatus}>
             <View style={styles.name}>
-              <Text style={styles.nameText}>Prasad Lakshan</Text>
+              <Text style={styles.nameText}>Kamila Perera</Text>
             </View>
             <View style={styles.status}>
-              <Text style={styles.statusText}>Status</Text>
-              <Text style={styles.statusText}>Present</Text>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>Has to pick</Text>
             </View>
           </View>
           <View style={styles.rightSide}>
-            <Image
-              source={require("../../assets/images/sideArrow.png")}
-              style={styles.sideArrow}
-            />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.studentNameContainer}>
@@ -149,18 +142,17 @@ const StudentList = ({ navigation }) => {
           </View>
           <View style={styles.nameAndStatus}>
             <View style={styles.name}>
-              <Text style={styles.nameText}>Asitha Muthumala</Text>
+              <Text style={styles.nameText}>Sahan Perera</Text>
             </View>
             <View style={styles.status}>
-              <Text style={styles.statusText}>Status</Text>
-              <Text style={styles.statusText}>Present</Text>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>Has to pick</Text>
             </View>
           </View>
           <View style={styles.rightSide}>
-            <Image
-              source={require("../../assets/images/sideArrow.png")}
-              style={styles.sideArrow}
-            />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.studentNameContainer}>
@@ -172,19 +164,17 @@ const StudentList = ({ navigation }) => {
           </View>
           <View style={styles.nameAndStatus}>
             <View style={styles.name}>
-              <Text style={styles.nameText}>Nishamal Perera</Text>
+              <Text style={styles.nameText}>Sasitha Kumara</Text>
             </View>
             <View style={styles.status}>
-              <Text style={styles.statusText}>Status</Text>
-              <Text style={styles.statusText}>Present</Text>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>In vehicle</Text>
             </View>
           </View>
-
           <View style={styles.rightSide}>
-            <Image
-              source={require("../../assets/images/sideArrow.png")}
-              style={styles.sideArrow}
-            />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.studentNameContainer}>
@@ -196,19 +186,39 @@ const StudentList = ({ navigation }) => {
           </View>
           <View style={styles.nameAndStatus}>
             <View style={styles.name}>
-              <Text style={styles.nameText}>Akila Dissanayake</Text>
+              <Text style={styles.nameText}>Thisara Perera</Text>
             </View>
             <View style={styles.status}>
-              <Text style={styles.statusText}>Status</Text>
-              <Text style={styles.statusText}>Present</Text>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>Has to pick</Text>
             </View>
           </View>
-
           <View style={styles.rightSide}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.studentNameContainer}>
+          <View style={styles.studentProfilePic}>
             <Image
-              source={require("../../assets/images/sideArrow.png")}
-              style={styles.sideArrow}
+              source={require("../../assets/images/profilePic.jpg")}
+              style={styles.profilePicSmall}
             />
+          </View>
+          <View style={styles.nameAndStatus}>
+            <View style={styles.name}>
+              <Text style={styles.nameText}>Kamila Perera</Text>
+            </View>
+            <View style={styles.status}>
+              <Text style={styles.statusText}>Status: </Text>
+              <Text style={styles.statusText}>Has to pick</Text>
+            </View>
+          </View>
+          <View style={styles.rightSide}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Picked Up</Text>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </ScrollView>
@@ -275,7 +285,7 @@ const styles = StyleSheet.create({
   },
   nameAndStatus: {
     display: "flex",
-    width: "55%",
+    width: "50%",
   },
   name: {
     display: "flex",
@@ -309,5 +319,22 @@ const styles = StyleSheet.create({
     tintColor: colors.orange,
     width: "50%",
     height: "50%",
+  },
+  button: {
+    height: 40,
+    width: 80,
+    backgroundColor: colors.orange,
+    borderRadius: 20,
+    alignSelf: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  buttonText: {
+    alignSelf: "center",
+    justifyContent: "center",
+    color: colors.white,
+    fontSize: 17,
+    marginTop: -2,
   },
 });
