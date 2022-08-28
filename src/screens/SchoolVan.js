@@ -7,6 +7,7 @@ import {
   ScrollView,
   StatusBar,
 } from "react-native";
+import { TextInput } from "react-native-paper";
 import apiClient from "../Services/apiClient";
 import { Icon } from "react-native-elements";
 import { colors, parameters } from "../globals/styles";
@@ -65,6 +66,28 @@ const SchoolVan = ({ navigation }) => {
             { url: require("../../assets/database/z_p06-god-01.jpg") },
           ]}
         />
+        <View style={styles.nameBox4}>
+          <View style={styles.informationTopic}>
+            <Text style={styles.informationTopicText}>
+              Emegency Notification
+            </Text>
+          </View>
+          <View style={styles.emergencyBody}>
+            <TextInput
+              style={styles.textInput}
+              mode="outlined"
+              label="Add Emergency message here..."
+              theme={{
+                colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
+              }}
+              onChangeText={(text) => setForm({ ...form, userName: text })}
+              left={<TextInput.Icon name="plus" />}
+            />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Broadcast</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <View style={styles.nameBox2}>
           <View style={styles.informationTopic}>
             <Text style={styles.informationTopicText}>Information</Text>
@@ -121,10 +144,7 @@ const SchoolVan = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.nameBox3}>
-          <TouchableOpacity
-            style={styles.button2}
-            onPress={() => navigation.navigate("StudentList")}
-          >
+          <TouchableOpacity style={styles.button2}>
             <Image
               style={{
                 width: 20,
@@ -137,7 +157,10 @@ const SchoolVan = ({ navigation }) => {
             />
             <Text style={styles.button2Text}>Morning student list</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button2}>
+          <TouchableOpacity
+            style={styles.button2}
+            onPress={() => navigation.navigate("StudentList")}
+          >
             <Image
               style={{
                 width: 20,
@@ -343,5 +366,53 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: "sans-serif-medium",
     marginTop: -2,
+  },
+  textInput: {
+    width: (parameters.SCREEN_WIDTH * 4) / 6,
+    height: 50,
+    marginBottom: 10,
+    backgroundColor: "white",
+  },
+  emergencyBody: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "70%",
+  },
+  button: {
+    height: 40,
+    width: 120,
+    backgroundColor: colors.orange,
+    borderRadius: 20,
+    alignSelf: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  buttonText: {
+    alignSelf: "center",
+    justifyContent: "center",
+    color: colors.white,
+    fontSize: 17,
+    marginTop: -2,
+  },
+  nameBox4: {
+    display: "flex",
+    backgroundColor: colors.midBoxWhite,
+    alignSelf: "center",
+    width: (parameters.SCREEN_WIDTH * 11) / 12,
+    height: parameters.SCREEN_HEIGHT / 3,
+    alignItems: "center",
+    marginTop: "7%",
+    borderRadius: 10,
+    shadowColor: "#7F5DF0",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
   },
 });

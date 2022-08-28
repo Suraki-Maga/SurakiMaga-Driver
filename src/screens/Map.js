@@ -36,9 +36,12 @@ const Map = () => {
   });
   const [errorMsg, setErrorMsg] = useState(null);
   const origin = { latitude: position.latitude, longitude: position.longitude };
-  const destination = { latitude: 6.93371, longitude: 79.85548 };
+  const destination = {
+    latitude: 6.909044420770567,
+    longitude: 79.87515656700285,
+  };
   // const GOOGLE_MAPS_APIKEY =process.env.REACT_APP_GOOGLE_API_KEY;
-  const GOOGLE_MAPS_APIKEY = "";
+  const GOOGLE_MAPS_APIKEY = "AIzaSyDrqTMpp62uuZvHpJDV8XHP4yZjeoCbR-4";
 
   const getStudentDetails = async (id) => {
     setModalVisible(true);
@@ -210,7 +213,7 @@ const Map = () => {
             <Text style={styles.secondRowFont}>Current Speed</Text>
           </View>
           <View style={styles.right}>
-            <Text style={styles.secondRowFont}>40Kmph</Text>
+            <Text style={styles.secondRowFont}>0Kmph</Text>
           </View>
         </View>
       </View>
@@ -253,15 +256,18 @@ const Map = () => {
             </Marker>
           );
         })}
-        {/* <Marker  
-            coordinate={{latitude:6.7896398,longitude:79.9255692}} pinColor='green'
-            draggable={true}
-            
-
-            image={require('../../assets/images/schoolvanmap.png')}
-            >
-              <Callout><Text>Faalil's Palace</Text></Callout>
-              </Marker>  */}
+        <Marker
+          coordinate={{
+            latitude: 6.909044420770567,
+            longitude: 79.87515656700285,
+          }}
+          pinColor="green"
+        >
+          <Image
+            style={{ width: 40, height: 40, resizeMode: "cover" }}
+            source={require("../../assets/images/schoolicon.png")}
+          />
+        </Marker>
       </MapView>
     </View>
   );
