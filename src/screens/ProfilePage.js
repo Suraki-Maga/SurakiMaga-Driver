@@ -7,21 +7,22 @@ import {
   Switch,
   ScrollView,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import apiClient from "../Services/apiClient";
-import { Icon } from "react-native-elements";
 import { colors, parameters } from "../globals/styles";
 import Header from "../context/Header";
-import { color } from "react-native-reanimated";
 
 const ProfilePage = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [errors, setErrors] = useState({});
+  const isFocused = useIsFocused();
   const [fetchData, setFetchData] = useState({
     name: "",
     contact: "",
     licenceno: "",
     nic: "",
+    image: "",
   });
 
   useEffect(() => {
@@ -48,11 +49,13 @@ const ProfilePage = ({ navigation }) => {
         contact: data.result.contact,
         licenceno: data.result.licenceno,
         nic: data.result.nic,
+        image: data.result.image,
       });
     }
 
     getKind();
-  }, []);
+  }, [isFocused]);
+
   const logout = () => {
     console.log("function called");
     apiClient.removeToken();
@@ -92,10 +95,18 @@ const ProfilePage = ({ navigation }) => {
               style={styles.editIcon}
             />
           </TouchableOpacity>
-          <Image
-            source={require("../../assets/images/profilePic.jpg")}
-            style={styles.profilePicBig}
-          />
+
+          {fetchData.image ? (
+            <Image
+              source={{ uri: fetchData.image }}
+              style={styles.profilePicBig}
+            />
+          ) : (
+            <Image
+              source={require("../../assets/images/profilePic.jpg")}
+              style={styles.profilePicBig}
+            />
+          )}
           <View style={styles.nameAndEdit}>
             <Text style={styles.nameContainer}>{fetchData.name}</Text>
           </View>

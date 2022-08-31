@@ -1,9 +1,27 @@
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import apiClient from "../Services/apiClient";
+import React, { useState, useEffect } from "react";
 import { Icon } from "react-native-elements";
+import { useIsFocused } from "@react-navigation/native";
 import { colors, parameters } from "../globals/styles";
 
 const Header = () => {
+  const isFocused = useIsFocused();
+  const [fetchData, setFetchData] = useState({
+    image: "",
+  });
+  useEffect(() => {
+    async function getKind() {
+      const { data, error } = await apiClient.loadDetails();
+      console.log(data);
+
+      setFetchData({
+        image: data.result.image,
+      });
+    }
+
+    getKind();
+  }, [isFocused]);
   return (
     <View style={styles.header}>
       <View style={styles.leftSideOfHeader}>
@@ -21,10 +39,17 @@ const Header = () => {
             size={30}
           />
         </TouchableOpacity>
-        <Image
-          source={require("../../assets/images/profilePic.jpg")}
-          style={styles.profilePicSmall}
-        />
+        {fetchData.image ? (
+          <Image
+            source={{ uri: fetchData.image }}
+            style={styles.profilePicSmall}
+          />
+        ) : (
+          <Image
+            source={require("../../assets/images/profilePic.jpg")}
+            style={styles.profilePicSmall}
+          />
+        )}
       </View>
     </View>
   );

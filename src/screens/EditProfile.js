@@ -1,10 +1,111 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Modal,
+  DevSettings,
+} from "react-native";
+
+import apiClient from "../Services/apiClient";
 import { colors, parameters } from "../globals/styles";
 import { TextInput } from "react-native-paper";
-import React from "react";
+import * as ImagePicker from "expo-image-picker";
+import React, { useState, useEffect } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const EditProfile = ({ route, navigation }) => {
+  const [pickedImage, setPickedImage] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const openPopUp = () => {
+    setModalVisible(true);
+  };
+  const [fetchData, setFetchData] = useState({
+    image: "",
+  });
+  useEffect(() => {
+    async function getKind() {
+      const { data, error } = await apiClient.loadDetails();
+      console.log(data);
+
+      setFetchData({
+        image: data.result.image,
+      });
+    }
+
+    getKind();
+  }, [navigation]);
+
+  const turnOnCamera = async () => {
+    setModalVisible(!modalVisible);
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+    if (!result.cancelled) {
+      let newfile = {
+        uri: result.uri,
+        type: `test/${result.uri.split(".")[1]}`,
+        name: `test.${result.uri.split(".")[1]}`,
+      };
+      submitDetails(newfile);
+    }
+
+    //second method
+  };
+  const turnOnPicture = async () => {
+    setModalVisible(!modalVisible);
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    // Explore the result
+    console.log(result);
+
+    if (!result.cancelled) {
+      let newfile = {
+        uri: result.uri,
+        type: `test/${result.uri.split(".")[1]}`,
+        name: `test.${result.uri.split(".")[1]}`,
+      };
+      submitDetails(newfile);
+    }
+  };
+  const submitDetails = (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "dskmbhbt");
+    data.append("cloud_name", "surakimagaimagecloud");
+    fetch("https://api.cloudinary.com/v1_1/surakimagaimagecloud/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.url);
+        let { dataResponse, error } = apiClient.changeProfilePicture({
+          profilePic: data.url,
+        });
+        //check success
+        setFetchData({ image: data.url });
+      });
+  };
   return (
     <KeyboardAwareScrollView
       style={{ backgroundColor: "#4c69a5" }}
@@ -12,15 +113,61 @@ const EditProfile = ({ route, navigation }) => {
       contentContainerStyle={styles.container}
       scrollEnabled={false}
     >
+      <Modal
+        animationType="fade"
+        transparent
+        style={styles.alert}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.alert}>
+          <View style={styles.alertbox}>
+            <View style={styles.alertHeader}>
+              <Text style={styles.alertTitle}>Upload Photo</Text>
+              <Text style={styles.alertbodyTxt}>Pick a profile picture</Text>
+            </View>
+            <View style={styles.alertBody}>
+              <TouchableOpacity
+                style={styles.confirmbtn}
+                onPress={turnOnCamera}
+              >
+                <Text style={styles.confirmbtnText}>Take a picture</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.confirmbtn}
+                onPress={turnOnPicture}
+              >
+                <Text style={styles.confirmbtnText}>Upload from gallery</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.confirmbtn}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.confirmbtnText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.nameView}>
         <Text style={styles.title}>Edit Profile</Text>
       </View>
       <View style={styles.picAndEdit}>
-        <Image
-          source={require("../../assets/images/profilePic.jpg")}
-          style={styles.profilePicBig}
-        />
-        <TouchableOpacity style={styles.editprofileBtn}>
+        {fetchData.image ? (
+          <Image
+            source={{ uri: fetchData.image }}
+            style={styles.profilePicBig}
+          />
+        ) : (
+          <Image
+            source={require("../../assets/images/profilePic.jpg")}
+            style={styles.profilePicBig}
+          />
+        )}
+        <TouchableOpacity style={styles.editprofileBtn} onPress={openPopUp}>
           <Image
             source={require("../../assets/images/editicon.png")}
             style={styles.editIcon}
@@ -219,6 +366,66 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonText: {
+    alignSelf: "center",
+    justifyContent: "center",
+    color: colors.white,
+    fontSize: 20,
+    marginTop: -2,
+  },
+  alert: {
+    flex: 1,
+    backgroundColor: "#00000090",
+    alignItems: "center",
+    justifyContent: "center",
+    width: parameters.SCREEN_WIDTH,
+    height: parameters.SCREEN_HEIGHT,
+
+    // backgroundColor:'red',
+  },
+  alertbox: {
+    display: "flex",
+    borderRadius: 5,
+    alignItems: "center",
+    width: (parameters.SCREEN_WIDTH * 3.2) / 4,
+    height: (parameters.SCREEN_HEIGHT * 4) / 12,
+    backgroundColor: colors.midBoxWhite,
+    // shadowColor: '#171717',
+    // shadowOffset: {width: -3, height: 4},
+    // shadowOpacity: 1,
+    // shadowRadius: 3,
+  },
+  alertHeader: {
+    display: "flex",
+    width: "100%",
+    height: "40%",
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: "pink",
+  },
+  alertBody: {
+    display: "flex",
+    justifyContent: "space-evenly",
+    width: "100%",
+    height: "60%",
+    paddingBottom: 10,
+    // backgroundColor: "yellow",
+  },
+  alertTitle: {
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+  alertbodyTxt: {
+    fontSize: 18,
+  },
+  confirmbtn: {
+    height: 40,
+    width: "80%",
+    backgroundColor: colors.orange,
+    borderRadius: 5,
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  confirmbtnText: {
     alignSelf: "center",
     justifyContent: "center",
     color: colors.white,

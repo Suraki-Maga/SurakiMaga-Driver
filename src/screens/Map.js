@@ -40,7 +40,7 @@ const Map = () => {
     latitude: 6.909044420770567,
     longitude: 79.87515656700285,
   };
-  // const GOOGLE_MAPS_APIKEY =process.env.REACT_APP_GOOGLE_API_KEY;
+  // const GOOGLE_MAPS_APIKEY = process.env.GOOGLE_API_KEY;
   const GOOGLE_MAPS_APIKEY = "AIzaSyDrqTMpp62uuZvHpJDV8XHP4yZjeoCbR-4";
 
   const getStudentDetails = async (id) => {
