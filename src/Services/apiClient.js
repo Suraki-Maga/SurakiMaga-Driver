@@ -112,6 +112,21 @@ class ApiClient {
       data: credentials,
     });
   }
+  async checkCurrentPassword(credentials) {
+    return await this.request({
+      endpoint: `driverauth/checkCurrentPassword`,
+      method: `POST`,
+      data: credentials,
+    });
+  }
+  async setNewPassword(credentials) {
+    console.log(credentials);
+    return await this.request({
+      endpoint: `driverauth/setNewPassword`,
+      method: `POST`,
+      data: credentials,
+    });
+  }
 }
 
 const API = new ApiClient(
