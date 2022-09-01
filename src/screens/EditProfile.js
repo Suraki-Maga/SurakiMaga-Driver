@@ -14,8 +14,10 @@ import { TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState, useEffect } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { getPathFromState } from "@react-navigation/native";
 
 const EditProfile = ({ route, navigation }) => {
+  const [formError, setFormError] = useState(null);
   const [pickedImage, setPickedImage] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const openPopUp = () => {
@@ -23,6 +25,11 @@ const EditProfile = ({ route, navigation }) => {
   };
   const [fetchData, setFetchData] = useState({
     image: "",
+  });
+  const [form, setForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   useEffect(() => {
     async function getKind() {
@@ -105,6 +112,34 @@ const EditProfile = ({ route, navigation }) => {
         //check success
         setFetchData({ image: data.url });
       });
+  };
+
+  const checkCurrentPassword = async () => {
+    const { data, error } = await apiClient.checkCurrentPassword({
+      currentPassword: form.currentPassword,
+    });
+    console.log(data);
+    if (data.result == "invalid") {
+      setFormError("Current password is not matched :(");
+    } else {
+      setFormError(null);
+      if (form.newPassword == "") {
+        setFormError("Password can't be empty");
+      } else if (form.confirmPassword == "") {
+        setFormError("Please confirm your new password");
+      } else if (form.newPassword.length < 8) {
+        setFormError("Password length should be atleast 8 characters long");
+      } else if (form.newPassword != form.confirmPassword) {
+        setFormError("Password and the confirmation doesn't match");
+      } else {
+        const { dataResponse, error } = await apiClient.setNewPassword({
+          newPassword: form.newPassword,
+        });
+        if (dataResponse.result == "done") {
+          console.log(dataResponse);
+        }
+      }
+    }
   };
   return (
     <KeyboardAwareScrollView
@@ -204,7 +239,7 @@ const EditProfile = ({ route, navigation }) => {
             theme={{
               colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
             }}
-            onChangeText={(text) => setForm({ ...form, password: text })}
+            onChangeText={(text) => setForm({ ...form, currentPassword: text })}
             left={<TextInput.Icon name="lock" />}
             right={<TextInput.Icon name="eye" />}
           />
@@ -220,7 +255,7 @@ const EditProfile = ({ route, navigation }) => {
             theme={{
               colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
             }}
-            onChangeText={(text) => setForm({ ...form, password: text })}
+            onChangeText={(text) => setForm({ ...form, newPassword: text })}
             left={<TextInput.Icon name="lock" />}
             right={<TextInput.Icon name="eye" />}
           />
@@ -236,13 +271,18 @@ const EditProfile = ({ route, navigation }) => {
             theme={{
               colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
             }}
-            onChangeText={(text) => setForm({ ...form, password: text })}
+            onChangeText={(text) => setForm({ ...form, confirmPassword: text })}
             left={<TextInput.Icon name="lock" />}
             right={<TextInput.Icon name="eye" />}
           />
         </View>
       </View>
-      <TouchableOpacity style={styles.button}>
+      {formError != null ? (
+        <View style={styles.noticeMsg}>
+          <Text style={styles.noticeMsgText}>{formError}</Text>
+        </View>
+      ) : null}
+      <TouchableOpacity style={styles.button} onPress={checkCurrentPassword}>
         <Text style={styles.buttonText}>Save</Text>
       </TouchableOpacity>
     </KeyboardAwareScrollView>
@@ -362,7 +402,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: "center",
     justifyContent: "center",
-    marginTop: 30,
+    marginTop: 10,
     marginBottom: 20,
   },
   buttonText: {
@@ -431,5 +471,18 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 20,
     marginTop: -2,
+  },
+  noticeMsg: {
+    marginTop: 5,
+    marginBottom: 5,
+    display: "flex",
+    height: 30,
+    width: (parameters.SCREEN_WIDTH * 5) / 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noticeMsgText: {
+    color: "red",
+    fontSize: 15,
   },
 });
