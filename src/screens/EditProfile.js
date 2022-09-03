@@ -18,8 +18,18 @@ import { getPathFromState } from "@react-navigation/native";
 
 const EditProfile = ({ route, navigation }) => {
   const [formError, setFormError] = useState(null);
+  const [mobileNo, setMobileNo] = useState({
+    mobile: route.params.contact,
+    otp: "",
+    otpError: "",
+  });
+  const [editContactState, setEditContactState] = useState(false);
   const [pickedImage, setPickedImage] = useState("");
+  const [contactError, setContactError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [otpModalVisible, setOtpModalVisible] = useState(false);
+  const [otpVisible, setOtpVisible] = useState(false);
+  const [msgVisible, setMsgVisible] = useState(false);
   const openPopUp = () => {
     setModalVisible(true);
   };
@@ -132,12 +142,54 @@ const EditProfile = ({ route, navigation }) => {
       } else if (form.newPassword != form.confirmPassword) {
         setFormError("Password and the confirmation doesn't match");
       } else {
-        const { dataResponse, error } = await apiClient.setNewPassword({
+        const { data, error } = await apiClient.setNewPassword({
           newPassword: form.newPassword,
         });
-        if (dataResponse.result == "done") {
-          console.log(dataResponse);
+        if (data.result == "done") {
+          setMsgVisible(true);
+          setForm({
+            ...form,
+            currentPassword: "",
+            newPassword: "",
+            confirmPassword: "",
+          });
         }
+        console.log(data);
+      }
+    }
+  };
+
+  const changeMobileNo = async () => {
+    console.log(mobileNo.mobile);
+    if (mobileNo.mobile == "") {
+      setContactError("Mobile Number can't be empty");
+    } else if (mobileNo.mobile.length != 10) {
+      setContactError("Mobile Number should have 10 numbers");
+    } else if (mobileNo.mobile.charAt(0) != "0") {
+      setContactError("Mobile Number should started with '0'");
+    } else {
+      setOtpModalVisible(true);
+      const { data, error } = await apiClient.getOtpForNewNo({
+        mobileNo: mobileNo.mobile,
+      });
+      console.log(data);
+      setMobileNo({ ...mobileNo, respond: data.result });
+    }
+  };
+  const submitMobileNo = async () => {
+    if (mobileNo.otp == "") {
+      setMobileNo({ ...mobileNo, otpError: "Otp can't be empty" });
+    } else {
+      const { data, error } = await apiClient.submitContact({
+        otp: mobileNo.otp,
+        mobileNo: mobileNo.mobile,
+      });
+      console.log(data);
+      if (data.result == "failed") {
+        setMobileNo({ ...mobileNo, otpError: "Otp doesn't match" });
+      } else {
+        setOtpModalVisible(!otpModalVisible);
+        setEditContactState(!editContactState);
       }
     }
   };
@@ -148,6 +200,31 @@ const EditProfile = ({ route, navigation }) => {
       contentContainerStyle={styles.container}
       scrollEnabled={false}
     >
+      {/* password changed */}
+      <Modal
+        animationType="fade"
+        transparent
+        style={styles.alert2}
+        visible={msgVisible}
+        onRequestClose={() => {
+          setMsgVisible(!msgVisible);
+        }}
+      >
+        <View style={styles.alert2}>
+          <View style={styles.alertbox2}>
+            <Text style={styles.alertTitle2}>
+              Password changed sucessfully!
+            </Text>
+            <TouchableOpacity
+              style={styles.confirmbtn2}
+              onPress={() => setMsgVisible(!msgVisible)}
+            >
+              <Text style={styles.confirmbtnText2}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* photo upload */}
       <Modal
         animationType="fade"
         transparent
@@ -186,7 +263,54 @@ const EditProfile = ({ route, navigation }) => {
           </View>
         </View>
       </Modal>
-
+      {/* otp pop up */}
+      <Modal
+        animationType="fade"
+        transparent
+        style={styles.alert}
+        visible={otpModalVisible}
+        onRequestClose={() => {
+          setOtpModalVisible(!otpModalVisible);
+        }}
+      >
+        <View style={styles.alert3}>
+          <View style={styles.alertbox3}>
+            <View style={styles.alertHeader}>
+              <Text style={styles.alertTitle}>Otp Verification</Text>
+              <Text style={styles.alertbodyTxt}>
+                Otp has been sent to {mobileNo.mobile}
+              </Text>
+            </View>
+            <View style={styles.alertBody3}>
+              <TextInput
+                style={styles.textInput2}
+                mode="outlined"
+                label="Enter the otp"
+                value={mobileNo.otp}
+                onChangeText={(text) => setMobileNo({ ...mobileNo, otp: text })}
+                theme={{
+                  colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
+                }}
+                left={<TextInput.Icon name="plus" />}
+              />
+              <View style={styles.noticeOtptMsg}>
+                <Text style={styles.noticeMsgText}>{mobileNo.otpError}</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.confirmbtn2}
+                onPress={submitMobileNo}
+              >
+                <Text style={styles.confirmbtnText2}>Confirm</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setOtpModalVisible(!otpModalVisible)}
+              >
+                <Text style={styles.confirmbtnText3}>Resend otp</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.nameView}>
         <Text style={styles.title}>Edit Profile</Text>
       </View>
@@ -212,21 +336,50 @@ const EditProfile = ({ route, navigation }) => {
       <View style={styles.editContainer}>
         <View style={styles.editTxtandBtn}>
           <TextInput
-            style={styles.textInput}
+            style={styles.textInput2}
             mode="outlined"
             label="Contact No"
-            value={route.params.contact}
-            editable={false}
+            value={mobileNo.mobile}
+            editable={editContactState}
+            onChangeText={(text) => setMobileNo({ ...mobileNo, mobile: text })}
             theme={{
               colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
             }}
             left={<TextInput.Icon name="account" />}
           />
+          {editContactState ? (
+            <View style={styles.contactEdit}>
+              <TouchableOpacity onPress={changeMobileNo}>
+                <Image
+                  source={require("../../assets/images/correct.jpg")}
+                  style={styles.correctButton}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setEditContactState(!editContactState)}
+              >
+                <Image
+                  source={require("../../assets/images/incorrect.png")}
+                  style={styles.IncorrectIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.contactEdit}>
+              <TouchableOpacity
+                onPress={() => setEditContactState(!editContactState)}
+              >
+                <Image
+                  source={require("../../assets/images/editicon.png")}
+                  style={styles.enableEditIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-        <Image
-          source={require("../../assets/images/editicon.png")}
-          style={styles.enableEditIcon}
-        />
+        <View style={styles.noticeContactMsg}>
+          <Text style={styles.noticeMsgText}>{contactError}</Text>
+        </View>
       </View>
       <Text style={styles.passwordTitle}>Change Password</Text>
       <View style={styles.editContainer}>
@@ -236,6 +389,7 @@ const EditProfile = ({ route, navigation }) => {
             mode="outlined"
             label="Current Password"
             secureTextEntry
+            value={form.currentPassword}
             theme={{
               colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
             }}
@@ -252,6 +406,7 @@ const EditProfile = ({ route, navigation }) => {
             mode="outlined"
             label="New Password"
             secureTextEntry
+            value={form.newPassword}
             theme={{
               colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
             }}
@@ -267,6 +422,7 @@ const EditProfile = ({ route, navigation }) => {
             style={styles.textInput}
             mode="outlined"
             label="Confirm New Password"
+            value={form.confirmPassword}
             secureTextEntry
             theme={{
               colors: { primary: "#FF8C01", underlineColor: "#FF8C01" },
@@ -331,14 +487,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.midBoxWhite,
     borderRadius: 20,
   },
+
   editIcon: {
     width: 20,
     height: 20,
     tintColor: colors.orange,
   },
+  IncorrectIcon: {
+    width: 30,
+    height: 30,
+  },
+  correctButton: {
+    width: 35,
+    height: 35,
+  },
   enableEditIcon: {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
     tintColor: colors.orange,
   },
   picAndEdit: {
@@ -353,8 +518,7 @@ const styles = StyleSheet.create({
   editContainer: {
     marginTop: 15,
     display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "center",
     width: (parameters.SCREEN_WIDTH * 5) / 6,
     height: 40,
   },
@@ -366,6 +530,12 @@ const styles = StyleSheet.create({
     width: (parameters.SCREEN_WIDTH * 5) / 6,
     height: 50,
   },
+  textInput2: {
+    width: (parameters.SCREEN_WIDTH * 3.2) / 6,
+    height: 40,
+    marginBottom: 10,
+    backgroundColor: "white",
+  },
   textInput: {
     width: (parameters.SCREEN_WIDTH * 4) / 6,
     height: 40,
@@ -376,8 +546,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+
     width: "100%",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   editTitle: {
     fontSize: 18,
@@ -386,8 +557,16 @@ const styles = StyleSheet.create({
     color: colors.font,
     fontSize: 25,
     fontFamily: "sans-serif-medium",
-    marginTop: 50,
+    marginTop: 60,
     marginBottom: 20,
+  },
+  contactEdit: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: 100,
+    height: 50,
   },
   changePasswordContainer: {
     display: "flex",
@@ -402,8 +581,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: "center",
     justifyContent: "center",
-    marginTop: 10,
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 10,
   },
   buttonText: {
     alignSelf: "center",
@@ -434,6 +613,28 @@ const styles = StyleSheet.create({
     // shadowOpacity: 1,
     // shadowRadius: 3,
   },
+  alert3: {
+    flex: 1,
+    backgroundColor: "#00000090",
+    alignItems: "center",
+    justifyContent: "center",
+    width: parameters.SCREEN_WIDTH,
+    height: parameters.SCREEN_HEIGHT,
+
+    // backgroundColor:'red',
+  },
+  alertbox3: {
+    display: "flex",
+    borderRadius: 5,
+    alignItems: "center",
+    width: (parameters.SCREEN_WIDTH * 3.2) / 4,
+    height: (parameters.SCREEN_HEIGHT * 4) / 10,
+    backgroundColor: colors.midBoxWhite,
+    // shadowColor: '#171717',
+    // shadowOffset: {width: -3, height: 4},
+    // shadowOpacity: 1,
+    // shadowRadius: 3,
+  },
   alertHeader: {
     display: "flex",
     width: "100%",
@@ -447,6 +648,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     width: "100%",
     height: "60%",
+    paddingBottom: 10,
+    // backgroundColor: "yellow",
+  },
+  alertBody3: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "100%",
+    height: "55%",
     paddingBottom: 10,
     // backgroundColor: "yellow",
   },
@@ -472,6 +682,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: -2,
   },
+  confirmbtnText3: {
+    alignSelf: "center",
+    justifyContent: "center",
+    color: colors.orange,
+    fontSize: 20,
+    marginTop: -2,
+  },
   noticeMsg: {
     marginTop: 5,
     marginBottom: 5,
@@ -481,8 +698,70 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  noticeContactMsg: {
+    marginTop: 5,
+    marginBottom: 5,
+    display: "flex",
+    height: 30,
+    width: (parameters.SCREEN_WIDTH * 5) / 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noticeOtpMsg: {
+    marginTop: 5,
+    marginBottom: 5,
+    display: "flex",
+    height: 20,
+    width: (parameters.SCREEN_WIDTH * 5) / 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   noticeMsgText: {
     color: "red",
     fontSize: 15,
+  },
+  alert2: {
+    flex: 1,
+    backgroundColor: "#00000090",
+    alignItems: "center",
+    justifyContent: "center",
+    width: parameters.SCREEN_WIDTH,
+    height: parameters.SCREEN_HEIGHT,
+
+    // backgroundColor:'red',
+  },
+  alertbox2: {
+    paddingTop: 5,
+    display: "flex",
+    borderRadius: 5,
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: (parameters.SCREEN_WIDTH * 3) / 4,
+    height: (parameters.SCREEN_HEIGHT * 4) / 20,
+    backgroundColor: colors.midBoxWhite,
+    // shadowColor: '#171717',
+    // shadowOffset: {width: -3, height: 4},
+    // shadowOpacity: 1,
+    // shadowRadius: 3,
+  },
+  alertTitle2: {
+    fontSize: 20,
+  },
+  confirmbtn2: {
+    height: 40,
+    width: parameters.SCREEN_WIDTH / 4,
+    backgroundColor: colors.orange,
+    borderRadius: 5,
+    alignSelf: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  confirmbtnText2: {
+    alignSelf: "center",
+    justifyContent: "center",
+    color: colors.white,
+    fontSize: 20,
+    marginTop: -2,
   },
 });
