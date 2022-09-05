@@ -18,6 +18,11 @@ import Header from "../context/Header";
 const SchoolVan = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [errors, setErrors] = useState({});
+  const [information, setInformation] = useState({
+    owner: "",
+    seats: "",
+    vehicleno: "",
+  });
   useEffect(() => {
     apiClient
       .getToken()
@@ -32,6 +37,20 @@ const SchoolVan = ({ navigation }) => {
       .catch((err) => console.log(err));
   });
 
+  useEffect(() => {
+    const loadVehicleInformation = async () => {
+      const { data, error } = await apiClient.loadVehicleInformation();
+      console.log(data);
+      if (data.result != "unavailable") {
+        setInformation({
+          owner: data.result.name,
+          seats: data.result.seats,
+          vehicleno: data.result.vehicleno,
+        });
+      }
+    };
+    loadVehicleInformation();
+  }, []);
   return (
     <View style={styles.container}>
       {/* <View style={styles.header}>
@@ -95,17 +114,21 @@ const SchoolVan = ({ navigation }) => {
           <View style={styles.informationBody}>
             <View style={styles.informationDetail}>
               <Text style={styles.informationDetailText}>Vehicle No</Text>
-              <Text style={styles.informationDetailText}>PA - 2587</Text>
+              <Text style={styles.informationDetailText}>
+                {information.vehicleno}
+              </Text>
             </View>
             <View style={styles.informationDetail}>
               <Text style={styles.informationDetailText}>Owner</Text>
               <Text style={styles.informationDetailText}>
-                Sadeepa Bhashitha
+                {information.owner}
               </Text>
             </View>
             <View style={styles.informationDetail}>
               <Text style={styles.informationDetailText}>No of Seats</Text>
-              <Text style={styles.informationDetailText}>18</Text>
+              <Text style={styles.informationDetailText}>
+                {information.seats}
+              </Text>
             </View>
           </View>
         </View>
