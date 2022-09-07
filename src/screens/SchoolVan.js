@@ -16,8 +16,7 @@ import Slideshow from "react-native-image-slider-show";
 import Header from "../context/Header";
 
 const SchoolVan = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [imageUrl, setImageUrl] = useState([]);
   const [information, setInformation] = useState({
     owner: "",
     seats: "",
@@ -51,6 +50,29 @@ const SchoolVan = ({ navigation }) => {
     };
     loadVehicleInformation();
   }, []);
+
+  useEffect(() => {
+    const loadVehicleImages = async () => {
+      const { data, error } = await apiClient.loadVehicleImages();
+      console.log(data);
+      if (data.result != "unavailable") {
+        setImageUrl(data.result);
+        // data.result.map((obj) => {
+        //   imageUrl.push(obj.Image);
+        // });
+      }
+    };
+    loadVehicleImages();
+    // console.log(imageUrl);
+  }, []);
+  let imageBucket = [];
+  imageUrl.map((data) => {
+    let image = {
+      url: data.image,
+    };
+    imageBucket.push(image);
+  });
+  console.log(imageBucket);
   return (
     <View style={styles.container}>
       {/* <View style={styles.header}>
@@ -80,10 +102,7 @@ const SchoolVan = ({ navigation }) => {
         <Slideshow
           containerStyle={styles.slideshow}
           overlay={true}
-          dataSource={[
-            { url: require("../../assets/database/image_30dd1ca8d9.jpg") },
-            { url: require("../../assets/database/z_p06-god-01.jpg") },
-          ]}
+          dataSource={imageBucket}
         />
         <View style={styles.nameBox4}>
           <View style={styles.informationTopic}>
