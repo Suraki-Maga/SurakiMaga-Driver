@@ -169,6 +169,12 @@ class ApiClient {
       data: credentials,
     });
   }
+  async checkIsAssigned() {
+    return await this.request({
+      endpoint: `driverauth/isAssigned`,
+      method: `GET`,
+    });
+  }
 }
 
 const API = new ApiClient(

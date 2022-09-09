@@ -9,6 +9,7 @@ import {
 } from "react-native";
 //import { MapView } from 'expo'
 import MapViewDirections from "react-native-maps-directions";
+import { useIsFocused } from "@react-navigation/native";
 import MapView, { Callout, Marker } from "react-native-maps";
 import { colors, parameters, mapStyle } from "../globals/styles";
 import apiClient from "../Services/apiClient";
@@ -16,6 +17,7 @@ import React, { useEffect, useState, useLayoutEffect } from "react";
 import * as Location from "expo-location";
 
 const Map = () => {
+  const isFocused = useIsFocused();
   const [selectedUser, setSelectedUser] = useState({
     id: "",
     fullName: "",
@@ -23,6 +25,7 @@ const Map = () => {
     school: "",
   });
   const [modalVisible, setModalVisible] = useState(false);
+
   const [locations, setlocations] = useState([]);
   let waypointArr = [];
   const [position, setPosition] = useState({
@@ -76,10 +79,15 @@ const Map = () => {
     async function getLocations() {
       const { data, error } = await apiClient.loadStudentLocations();
       // console.log(data.result)
-      setlocations(data.result);
+      if (data.result != "failed") {
+        setlocations(data.result);
+      } else {
+        console.log(data);
+      }
     }
     getLocations();
-  }, []);
+  }, [isFocused]);
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -91,7 +99,8 @@ const Map = () => {
       let location = await Location.getCurrentPositionAsync({});
       setPosition(location.coords);
     })();
-  }, []);
+  }, [isFocused]);
+
   // async function getmylocation(){
   //   let { status } = await Location.requestForegroundPermissionsAsync();
   //   if (status !== 'granted') {
