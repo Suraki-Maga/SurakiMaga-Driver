@@ -16,6 +16,7 @@ import Header from "../context/Header";
 const ProfilePage = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isEnabled, setIsEnabled] = useState();
   const isFocused = useIsFocused();
   const [fetchData, setFetchData] = useState({
     name: "",
@@ -61,7 +62,32 @@ const ProfilePage = ({ navigation }) => {
     apiClient.removeToken();
     navigation.navigate("LandingPage");
   };
-
+  useEffect(() => {
+    const getCurrentAvailability = async () => {
+      const { data, error } = await apiClient.getCurrentAvailability();
+      if (data.result.avail == 0) {
+        setIsEnabled(false);
+      } else {
+        setIsEnabled(true);
+      }
+    };
+    getCurrentAvailability();
+  }, []);
+  console.log(isEnabled);
+  const toggleSwitch = async () => {
+    setIsEnabled((previousState) => !previousState);
+    if (!isEnabled) {
+      console.log("flush as available");
+      const { data, error } = await apiClient.setAvailability({
+        status: "available",
+      });
+    } else {
+      console.log("set unavailable");
+      const { data, error } = await apiClient.setAvailability({
+        status: "unavailable",
+      });
+    }
+  };
   return (
     <View style={styles.container}>
       {/* <View style={styles.header}>
@@ -116,6 +142,8 @@ const ProfilePage = ({ navigation }) => {
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
             thumbColor={"#f4f3f4"}
+            onValueChange={toggleSwitch}
+            value={isEnabled}
           />
         </View>
         <View style={styles.nameBox2}>
