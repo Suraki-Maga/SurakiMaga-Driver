@@ -155,6 +155,20 @@ class ApiClient {
       method: `GET`,
     });
   }
+
+  async getCurrentAvailability() {
+    return await this.request({
+      endpoint: `driverauth/getCurrentAvailability`,
+      method: `GET`,
+    });
+  }
+  async setAvailability(credentials) {
+    return await this.request({
+      endpoint: `driverauth/setAvailability`,
+      method: `POST`,
+      data: credentials,
+    });
+  }
 }
 
 const API = new ApiClient(
