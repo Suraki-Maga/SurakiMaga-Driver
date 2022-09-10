@@ -22,6 +22,7 @@ const SchoolVan = ({ navigation }) => {
     seats: "",
     vehicleno: "",
   });
+  const [schools, setSchools] = useState([]);
   useEffect(() => {
     apiClient
       .getToken()
@@ -65,6 +66,16 @@ const SchoolVan = ({ navigation }) => {
     loadVehicleImages();
     // console.log(imageUrl);
   }, []);
+  useEffect(() => {
+    async function getDestination() {
+      const { data, error } = await apiClient.getDestination();
+      if (data.result != "failed") {
+        setSchools(data.result);
+      }
+    }
+    getDestination();
+  }, []);
+
   let imageBucket = [];
   imageUrl.map((data) => {
     let image = {
@@ -157,32 +168,23 @@ const SchoolVan = ({ navigation }) => {
             <Text style={styles.informationTopicText}>Today Trip</Text>
           </View>
           <View style={styles.informationBody}>
-            <View style={styles.informationDetail}>
-              <Text style={styles.informationDetailText}>Destination 1</Text>
-            </View>
-            <TouchableOpacity style={styles.informationDetail2}>
-              <Icon
-                type="material-community"
-                name="map-marker"
-                color={colors.grey2}
-                size={30}
-              />
-              <Text style={styles.informationDetailText2}>
-                D.S. Senanayake College
-              </Text>
-            </TouchableOpacity>
-            <View style={styles.informationDetail}>
-              <Text style={styles.informationDetailText}>Destination 2</Text>
-            </View>
-            <TouchableOpacity style={styles.informationDetail2}>
-              <Icon
-                type="material-community"
-                name="map-marker"
-                color={colors.grey2}
-                size={30}
-              />
-              <Text style={styles.informationDetailText2}>Vishaka College</Text>
-            </TouchableOpacity>
+            {schools.map((data) => {
+              return (
+                <View style={styles.informationDetail}>
+                  <TouchableOpacity style={styles.informationDetail2}>
+                    <Icon
+                      type="material-community"
+                      name="map-marker"
+                      color={colors.grey2}
+                      size={30}
+                    />
+                    <Text style={styles.informationDetailText2}>
+                      {data.name}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
           </View>
         </View>
         <View style={styles.nameBox3}>
@@ -319,6 +321,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: (parameters.SCREEN_WIDTH * 11) / 12,
     height: parameters.SCREEN_HEIGHT / 4,
+
     alignItems: "center",
     marginTop: "7%",
     borderRadius: 10,
@@ -384,6 +387,8 @@ const styles = StyleSheet.create({
   informationDetail: {
     display: "flex",
     width: "85%",
+    paddingBottom: 5,
+    padddingTop: 5,
     flexDirection: "row",
     justifyContent: "space-between",
   },
