@@ -175,6 +175,12 @@ class ApiClient {
       method: `GET`,
     });
   }
+  async getDestination() {
+    return await this.request({
+      endpoint: `driverauth/getDestination`,
+      method: `GET`,
+    });
+  }
 }
 
 const API = new ApiClient(
