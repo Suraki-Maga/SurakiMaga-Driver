@@ -181,6 +181,13 @@ class ApiClient {
       method: `GET`,
     });
   }
+  async getStudentList(credentials) {
+    return await this.request({
+      endpoint: `driverauth/getStudentList`,
+      method: `POST`,
+      data: credentials,
+    });
+  }
 }
 
 const API = new ApiClient(
