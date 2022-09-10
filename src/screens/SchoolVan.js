@@ -188,7 +188,15 @@ const SchoolVan = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.nameBox3}>
-          <TouchableOpacity style={styles.button2}>
+          <TouchableOpacity
+            style={styles.button2}
+            onPress={() =>
+              navigation.navigate("StudentList", {
+                headerTitle: "Morning Student List",
+                state: "morning",
+              })
+            }
+          >
             <Image
               style={{
                 width: 20,
@@ -203,7 +211,12 @@ const SchoolVan = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button2}
-            onPress={() => navigation.navigate("StudentList")}
+            onPress={() =>
+              navigation.navigate("StudentList", {
+                headerTitle: "Evening Student List",
+                state: "evening",
+              })
+            }
           >
             <Image
               style={{

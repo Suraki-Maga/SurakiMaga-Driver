@@ -6,12 +6,28 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import apiClient from "../Services/apiClient";
 import { Icon } from "react-native-elements";
 import Header from "../context/Header";
 import { colors, parameters } from "../globals/styles";
 
-const StudentList = ({ navigation }) => {
+const StudentList = ({ navigation, route }) => {
+  const [studentList, setStudentList] = useState([]);
+  useEffect(() => {
+    async function getStudents() {
+      const { data, error } = await apiClient.getStudentList({
+        state: route.params.state,
+      });
+      console.log(data);
+      if (data.result != undefined) {
+        setStudentList(data.result);
+      }
+    }
+    getStudents();
+  }, []);
+
+  // console.log(studentList);
   return (
     <View style={styles.container}>
       <Header />
@@ -21,206 +37,51 @@ const StudentList = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.nameView}>
-          <Text style={styles.title}>Evening Student List</Text>
+          <Text style={styles.title}>{route.params.headerTitle}</Text>
         </View>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Prasad Lakshan</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>In vehicle</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
+        {studentList.map((data) => {
+          return (
+            <TouchableOpacity style={styles.studentNameContainer}>
+              <View style={styles.studentProfilePic}>
+                {/* <Image
+                  source={require("../../assets/images/profilePic.jpg")}
+                  style={styles.profilePicSmall}
+                /> */}
+                {data.image ? (
+                  <Image
+                    source={{ uri: data.image }}
+                    style={styles.profilePicSmall}
+                  />
+                ) : (
+                  <Image
+                    source={require("../../assets/images/profilePic.jpg")}
+                    style={styles.profilePicSmall}
+                  />
+                )}
+              </View>
+              <View style={styles.nameAndStatus}>
+                <View style={styles.name}>
+                  <Text style={styles.nameText}>{data.fullname}</Text>
+                </View>
+                <View style={styles.status}>
+                  <Text style={styles.statusText}>Status: </Text>
+                  <Text style={styles.statusText}>In vehicle</Text>
+                </View>
+              </View>
+              <View style={styles.rightSide}>
+                {route.params.state == "evening" ? (
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Picked</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Dropped</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Sahan Perera</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>Has to pick</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Sasitha Kumara</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>In vehicle</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Thisara Perera</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>Has to pick</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Kamila Perera</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>Has to pick</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Sahan Perera</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>Has to pick</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Sasitha Kumara</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>In vehicle</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Thisara Perera</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>Has to pick</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.studentNameContainer}>
-          <View style={styles.studentProfilePic}>
-            <Image
-              source={require("../../assets/images/profilePic.jpg")}
-              style={styles.profilePicSmall}
-            />
-          </View>
-          <View style={styles.nameAndStatus}>
-            <View style={styles.name}>
-              <Text style={styles.nameText}>Kamila Perera</Text>
-            </View>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>Status: </Text>
-              <Text style={styles.statusText}>Has to pick</Text>
-            </View>
-          </View>
-          <View style={styles.rightSide}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Picked Up</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   );
