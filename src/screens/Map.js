@@ -27,7 +27,9 @@ const Map = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [locations, setlocations] = useState([]);
+  const [schoolLocations, setSchoolLocations] = useState([]);
   let waypointArr = [];
+  let waypointArrSchool = [];
   const [position, setPosition] = useState({
     accuracy: 11.454999923706055,
     altitude: -89.19999694824219,
@@ -38,11 +40,6 @@ const Map = () => {
     speed: 0.0023679917212575674,
   });
   const [errorMsg, setErrorMsg] = useState(null);
-  const origin = { latitude: position.latitude, longitude: position.longitude };
-  const destination = {
-    latitude: 6.909044420770567,
-    longitude: 79.87515656700285,
-  };
   // const GOOGLE_MAPS_APIKEY = process.env.GOOGLE_API_KEY;
   const GOOGLE_MAPS_APIKEY = "AIzaSyDrqTMpp62uuZvHpJDV8XHP4yZjeoCbR-4";
 
@@ -57,7 +54,7 @@ const Map = () => {
       id: data.result.id,
       fullName: data.result.fullname,
       age: data.result.age,
-      school: data.result.school,
+      school: data.result.name,
     });
     console.log("The id is: " + id);
   };
@@ -86,6 +83,18 @@ const Map = () => {
       }
     }
     getLocations();
+  }, [isFocused]);
+
+  useEffect(() => {
+    async function getSchoolLocations() {
+      const { data, error } = await apiClient.loadSchoolLocations();
+      if (data.result != "failed") {
+        setSchoolLocations(data.result);
+      } else {
+        console.log(data);
+      }
+    }
+    getSchoolLocations();
   }, [isFocused]);
 
   useEffect(() => {
@@ -121,9 +130,21 @@ const Map = () => {
     };
     waypointArr.push(temp);
   });
+  schoolLocations.map((data) => {
+    let temp = {
+      latitude: parseFloat(data.latitude),
+      longitude: parseFloat(data.longtitude),
+    };
+    waypointArr.push(temp);
+  });
 
-  console.log(waypointArr);
-
+  console.log("last school" + waypointArr.slice(-1));
+  // console.log(waypointArrSchool);
+  const origin = { latitude: position.latitude, longitude: position.longitude };
+  const destination = {
+    latitude: Object.values(waypointArr).pop().latitude,
+    longitude: Object.values(waypointArr).pop().longitude,
+  };
   return (
     <View style={styles.container}>
       <Modal
@@ -265,18 +286,26 @@ const Map = () => {
             </Marker>
           );
         })}
-        <Marker
-          coordinate={{
-            latitude: 6.909044420770567,
-            longitude: 79.87515656700285,
-          }}
-          pinColor="green"
-        >
-          <Image
-            style={{ width: 40, height: 40, resizeMode: "cover" }}
-            source={require("../../assets/images/schoolicon.png")}
-          />
-        </Marker>
+        {schoolLocations.map((data) => {
+          return (
+            <Marker
+              key={data.id}
+              coordinate={{
+                latitude: parseFloat(data.latitude),
+                longitude: parseFloat(data.longtitude),
+              }}
+              pinColor="green"
+            >
+              <Image
+                style={{ width: 40, height: 40, resizeMode: "cover" }}
+                source={require("../../assets/images/schoolicon.png")}
+              />
+              <Callout>
+                <Text>{data.name}</Text>
+              </Callout>
+            </Marker>
+          );
+        })}
       </MapView>
     </View>
   );
