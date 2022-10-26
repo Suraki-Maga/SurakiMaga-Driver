@@ -170,6 +170,7 @@ class ApiClient {
     });
   }
   async checkIsAssigned() {
+    console.log("CheckIsAssigned");
     return await this.request({
       endpoint: `driverauth/isAssigned`,
       method: `GET`,
@@ -186,6 +187,13 @@ class ApiClient {
       endpoint: `driverauth/getStudentList`,
       method: `POST`,
       data: credentials,
+    });
+  }
+  async loadSchoolLocations() {
+    console.log("schoolLocations");
+    return await this.request({
+      endpoint: `driverauth/loadSchoolLocations`,
+      method: `GET`,
     });
   }
 }
